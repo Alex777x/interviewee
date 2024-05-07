@@ -5,15 +5,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
+import lombok.extern.log4j.Log4j2;
+import pl.aliaksandrou.interviewee.audiointerceptor.IAudioProcessor;
 import pl.aliaksandrou.interviewee.enums.AIModel;
 import pl.aliaksandrou.interviewee.enums.Language;
 import pl.aliaksandrou.interviewee.enums.SpeechToTextModel;
+import pl.aliaksandrou.interviewee.model.InterviewParams;
+import pl.aliaksandrou.interviewee.service.KafkaService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import static pl.aliaksandrou.interviewee.service.Util.getAudioProcessor;
+
+@Log4j2
 public class StartViewController {
 
     @FXML
@@ -44,8 +53,9 @@ public class StartViewController {
     private boolean isInterviewStarted = false;
     private static final String PROMPT_TXT = "prompt.txt";
     private static final String TOKEN_TXT = "token.txt";
-//    private static final AudioProcessor audioProcessor = GetAudioProcessor.getAudioProcessor();
-//    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final IAudioProcessor audioProcessor = getAudioProcessor();
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private KafkaService kafkaService = new KafkaService();
 
     @FXML
     public void initialize() {
@@ -78,6 +88,13 @@ public class StartViewController {
         tokenApiTextField.setText(readFile(TOKEN_TXT));
 
         stopButton.setDisable(true);
+
+        executor.submit(() -> kafkaService.startKafkaBroker(
+                questionTextArea,
+                translatedQuestionTextArea,
+                answerTextArea,
+                translatedAnswerTextArea));
+
     }
 
     @FXML
@@ -88,16 +105,16 @@ public class StartViewController {
         isInterviewStarted = true;
         stopButton.setDisable(false);
         startButton.setDisable(true);
-//        executor.submit(() -> {
-//            audioProcessor.startProcessing(new InterviewData(
-//                    aiModelComboBox.getValue(),
-//                    speechToTextModelComboBox.getValue(),
-//                    mainLanguageComboBox.getValue(),
-//                    secondLanguageComboBox.getValue(),
-//                    promptTextField.getText(),
-//                    tokenApiTextField.getText()
-//            ));
-//        });
+        executor.submit(() -> audioProcessor.startProcessing(
+                InterviewParams.builder()
+                        .aIModel(aiModelComboBox.getValue())
+                        .speechToTextModel(speechToTextModelComboBox.getValue())
+                        .mainInterviewLanguage(mainLanguageComboBox.getValue())
+                        .secondInterviewLanguage(secondLanguageComboBox.getValue())
+                        .prompt(promptTextField.getText())
+                        .tokenApi(tokenApiTextField.getText())
+                        .build())
+        );
     }
 
     @FXML
@@ -108,14 +125,15 @@ public class StartViewController {
         isInterviewStarted = false;
         stopButton.setDisable(true);
         startButton.setDisable(false);
-//        executor.submit(() -> audioProcessor.stopProcessing());
+        audioProcessor.stopProcessing();
+        executor.submit(audioProcessor::stopProcessing);
     }
 
     private String readFile(String path) {
         try {
             return Files.readString(Paths.get(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error reading file: {}", path, e);
             return "";
         }
     }
