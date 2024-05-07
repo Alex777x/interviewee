@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" styleClass="vbox-spacing"
+      fx:controller="pl.aliaksandrou.interviewee.view.StartViewController" stylesheets="@styles.css">
+    <HBox styleClass="hbox-spacing">
+        <ComboBox fx:id="aiModelComboBox"/>
+        <ComboBox fx:id="speechToTextModelComboBox"/>
+        <ComboBox fx:id="mainLanguageComboBox"/>
+        <ComboBox fx:id="secondLanguageComboBox"/>
+    </HBox>
+    <HBox styleClass="hbox-spacing">
+        <Button fx:id="startButton" text="Start" onAction="#startInterview" styleClass="start-button"/>
+        <Button fx:id="stopButton" text="Stop" onAction="#stopInterview" styleClass="stop-button"/>
+        <Label text="Token API:"/>
+        <TextArea fx:id="tokenApiTextField" HBox.hgrow="ALWAYS" prefWidth="300" minHeight="50" maxHeight="50"
+                  wrapText="true"/>
+        <Label text="Prompt:"/>
+        <TextArea fx:id="promptTextField" HBox.hgrow="ALWAYS" prefWidth="580" minHeight="100" maxHeight="100"
+                  wrapText="true"/>
+    </HBox>
+    <HBox styleClass="hbox-spacing" VBox.vgrow="ALWAYS">
+        <TextArea fx:id="questionTextArea" HBox.hgrow="ALWAYS" editable="false"/>
+        <TextArea fx:id="translatedQuestionTextArea" HBox.hgrow="ALWAYS" editable="false"/>
+    </HBox>
+    <HBox styleClass="hbox-spacing" VBox.vgrow="ALWAYS">
+        <TextArea fx:id="answerTextArea" HBox.hgrow="ALWAYS" editable="false"/>
+        <TextArea fx:id="translatedAnswerTextArea" HBox.hgrow="ALWAYS" editable="false"/>
+    </HBox>
+</VBox>

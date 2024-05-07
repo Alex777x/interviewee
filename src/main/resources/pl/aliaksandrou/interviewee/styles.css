@@ -1,0 +1,29 @@
+.root {
+    -fx-font-family: "Arial";
+    -fx-base: #FFFFFF;
+}
+
+.button {
+    -fx-font-size: 14pt;
+}
+
+.text-area {
+    -fx-font-size: 12pt;
+}
+
+.hbox-spacing {
+    -fx-spacing: 10;
+}
+
+.vbox-spacing {
+    -fx-spacing: 20;
+    -fx-padding: 10 10 10 10;
+}
+
+.start-button {
+    -fx-background-color: green;
+}
+
+.stop-button {
+    -fx-background-color: red;
+}
