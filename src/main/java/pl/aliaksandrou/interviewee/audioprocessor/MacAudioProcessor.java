@@ -21,7 +21,6 @@ public class MacAudioProcessor implements IAudioProcessor {
     private boolean isRunning = true;
     private int silentSamples = 0;
     private final int threshold = 200;
-    private int fileNumber = 0;
 
     private static final float SAMPLE_RATE = 44100f;
     private static final AudioFormat FORMAT = new AudioFormat(SAMPLE_RATE, 16, 2, true, false);
@@ -83,6 +82,7 @@ public class MacAudioProcessor implements IAudioProcessor {
         while (i < bytesRead) {
             int sample = (buffer[i + 1] << 8) | (buffer[i] & 0xFF);
             log.debug("Amplitude: {}", sample);
+//            System.out.println("AAmplitude: " + sample);
             if (sample > threshold) {
                 silentSamples = 0;
                 if (!isRecording) {
@@ -109,9 +109,8 @@ public class MacAudioProcessor implements IAudioProcessor {
         isRecording = false;
         var audioBytes = bos.toByteArray();
         var audioInputStream = new AudioInputStream(new ByteArrayInputStream(audioBytes), FORMAT, audioBytes.length);
-        var audioFile = new File("audio" + fileNumber + ".wav");
+        var audioFile = new File("audio.wav");
         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
-        fileNumber++;
 
         return audioFile;
     }

@@ -44,3 +44,4 @@ token.txt
 /kafka_2.13-*/
 kafka_2.13-3.7.0.tgz
 kafka_2.13-*.tgz
+/logs/

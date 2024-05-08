@@ -1,32 +1,50 @@
 package pl.aliaksandrou.interviewee.speechtotext;
 
+import okhttp3.*;
+
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 public class OpenAISpeechToText implements ISpeechToTextRecognizer {
     @Override
-    public String recognize(File audioFile, String language, String tokenApi) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.openai.com/v1/audio/transcriptions"))
-                .header("Authorization", "Bearer " + "Your_OPENAI_API_KEY")
-                .header("Content-Type", "multipart/form-data")
-                .POST(ofMimeMultipartData(
-                        Paths.get(audioFile.getAbsolutePath())
-                ))
+    public String recognize(File audioFile, String language, String tokenApi) throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file", audioFile.getName(),
+                        RequestBody.create(MediaType.parse("application/octet-stream"), audioFile))
+                .addFormDataPart("model", "whisper-1")
+//                .addFormDataPart("prompt", "eiusmod nulla")
+//                .addFormDataPart("response_format", "json")
+//                .addFormDataPart("temperature", "0")
+//                .addFormDataPart("language", "")
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        return response.body();
+        Request request = new Request.Builder()
+                .url("https://api.openai.com/v1/audio/transcriptions")
+                .method("POST", body)
+                .addHeader("Authorization", "Bearer " + tokenApi.trim())
+                .addHeader("Content-Type", "multipart/form-data")
+                .build();
+        Response response = client.newCall(request).execute();
+//        HttpClient client = HttpClient.newHttpClient();
+//        HttpRequest request = HttpRequest.newBuilder()
+//                .uri(URI.create("https://api.openai.com/v1/audio/transcriptions"))
+//                .header("Authorization", "Bearer " + tokenApi.trim())
+//                .header("Content-Type", "multipart/form-data")
+//                .POST(ofMimeMultipartData(
+//                        Paths.get(audioFile.getAbsolutePath())
+//                ))
+//                .build();
+//
+//        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//
+//        return response.body();
+        return response.body().string();
     }
 
     private static HttpRequest.BodyPublisher ofMimeMultipartData(Path filePath) throws IOException {

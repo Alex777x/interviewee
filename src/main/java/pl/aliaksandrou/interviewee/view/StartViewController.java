@@ -111,9 +111,6 @@ public class StartViewController {
         if (isInterviewStarted) {
             return;
         }
-        isInterviewStarted = true;
-        stopButton.setDisable(false);
-        startButton.setDisable(true);
         savePromptAndToken();
         var interviewParams = InterviewParams.builder()
                 .aIModel(aiModelComboBox.getValue())
@@ -132,7 +129,11 @@ public class StartViewController {
             alert.setHeaderText("An error occurred:");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
+            return;
         }
+        isInterviewStarted = true;
+        stopButton.setDisable(false);
+        startButton.setDisable(true);
     }
 
     private void savePromptAndToken() {

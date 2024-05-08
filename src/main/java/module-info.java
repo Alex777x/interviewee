@@ -12,6 +12,7 @@ module pl.aliaksandrou.interviewee {
     requires kafka.clients;
     requires annotations;
     requires java.net.http;
+    requires okhttp3;
 
     opens pl.aliaksandrou.interviewee.view to javafx.fxml;
     exports pl.aliaksandrou.interviewee;
