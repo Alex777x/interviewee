@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import pl.aliaksandrou.interviewee.config.KafkaConsumerProperties;
 
@@ -12,12 +11,22 @@ import java.time.Duration;
 import java.util.Collections;
 
 import static pl.aliaksandrou.interviewee.config.KafkaTopics.*;
-import static pl.aliaksandrou.interviewee.config.KafkaTopics.TRANSLATED_ANSWER_TOPIC;
 
 @Log4j2
 public class KafkaService {
 
+    private static KafkaService instance;
     private volatile boolean running = true;
+
+    private KafkaService() {
+    }
+
+    public static KafkaService getInstance() {
+        if (instance == null) {
+            instance = new KafkaService();
+        }
+        return instance;
+    }
 
     public void startKafkaBroker(TextArea questionTextArea,
                                  TextArea translatedQuestionTextArea,
@@ -43,9 +52,9 @@ public class KafkaService {
             consumer.subscribe(Collections.singletonList(topic));
 
             while (running) {
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+                var records = consumer.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, String> consumerRecord : records) {
-                    String message = consumerRecord.value();
+                    var message = consumerRecord.value();
                     // Update TextArea on the JavaFX Application Thread
                     Platform.runLater(() -> textArea.setText(message));
                 }
@@ -53,7 +62,7 @@ public class KafkaService {
         }
     }
 
-    public void stop() {
+    public void stopConsume() {
         running = false;
     }
 }

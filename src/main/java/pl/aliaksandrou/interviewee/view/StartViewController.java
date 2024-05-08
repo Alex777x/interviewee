@@ -55,7 +55,7 @@ public class StartViewController {
     private static final String TOKEN_TXT = "token.txt";
     private static final IAudioProcessor audioProcessor = getAudioProcessor();
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
-    private KafkaService kafkaService = new KafkaService();
+    private final KafkaService kafkaService = KafkaService.getInstance();
 
     @FXML
     public void initialize() {
@@ -94,7 +94,6 @@ public class StartViewController {
                 translatedQuestionTextArea,
                 answerTextArea,
                 translatedAnswerTextArea));
-
     }
 
     @FXML
@@ -127,6 +126,7 @@ public class StartViewController {
         startButton.setDisable(false);
         audioProcessor.stopProcessing();
         executor.submit(audioProcessor::stopProcessing);
+        executor.submit(kafkaService::stopConsume);
     }
 
     private String readFile(String path) {
