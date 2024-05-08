@@ -19,6 +19,8 @@
         <controlsfx.version>11.1.2</controlsfx.version>
         <kafka.version>3.7.0</kafka.version>
         <javafx.version>21</javafx.version>
+        <okhttp.version>4.12.0</okhttp.version>
+        <jackson-databind.version>2.17.1</jackson-databind.version>
     </properties>
 
     <dependencies>
@@ -40,8 +42,14 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
+            <version>${okhttp.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>

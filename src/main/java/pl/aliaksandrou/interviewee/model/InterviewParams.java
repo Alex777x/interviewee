@@ -3,6 +3,7 @@ package pl.aliaksandrou.interviewee.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import pl.aliaksandrou.interviewee.enums.Language;
 import pl.aliaksandrou.interviewee.exceptions.ParamsValidationException;
 
 import static pl.aliaksandrou.interviewee.view.StartViewController.*;
@@ -13,8 +14,8 @@ import static pl.aliaksandrou.interviewee.view.StartViewController.*;
 public class InterviewParams {
     private String aIModel;
     private String speechToTextModel;
-    private String mainInterviewLanguage;
-    private String secondInterviewLanguage;
+    private Language mainInterviewLanguage;
+    private Language secondInterviewLanguage;
     private String prompt;
     private String tokenApi;
 
@@ -23,10 +24,10 @@ public class InterviewParams {
             throw new ParamsValidationException("AI model parameter cannot be empty or default.");
         } else if (SELECT_SPEECH_TO_TEXT_MODEL.equals(this.speechToTextModel) || this.speechToTextModel == null) {
             throw new ParamsValidationException("Speech to text model parameter cannot be empty or default.");
-        } else if (SELECT_MAIN_LANGUAGE.equals(this.mainInterviewLanguage) || this.mainInterviewLanguage == null) {
-            throw new ParamsValidationException("Main interview language parameter cannot be empty or default.");
-        } else if (SELECT_SECOND_LANGUAGE.equals(this.secondInterviewLanguage) || this.secondInterviewLanguage == null) {
-            throw new ParamsValidationException("Second interview language parameter cannot be empty or default.");
+        } else if (this.mainInterviewLanguage == null) {
+            throw new ParamsValidationException("Main interview language parameter cannot be empty.");
+        } else if (this.secondInterviewLanguage == null) {
+            throw new ParamsValidationException("Second interview language parameter cannot be empty.");
         } else if (this.prompt == null) {
             throw new ParamsValidationException("Prompt parameter cannot be null.");
         } else if (this.tokenApi == null) {

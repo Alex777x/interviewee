@@ -32,9 +32,9 @@ public class StartViewController {
     @FXML
     private ComboBox<String> speechToTextModelComboBox;
     @FXML
-    private ComboBox<String> mainLanguageComboBox;
+    private ComboBox<Language> mainLanguageComboBox;
     @FXML
-    private ComboBox<String> secondLanguageComboBox;
+    private ComboBox<Language> secondLanguageComboBox;
     @FXML
     private TextArea promptTextField;
     @FXML
@@ -56,8 +56,6 @@ public class StartViewController {
 
     public static final String SELECT_AI_MODEL = "Select AI Model";
     public static final String SELECT_SPEECH_TO_TEXT_MODEL = "Select Speech To Text Model";
-    public static final String SELECT_MAIN_LANGUAGE = "Select Main Language";
-    public static final String SELECT_SECOND_LANGUAGE = "Select Second Language";
     private boolean isInterviewStarted = false;
     private static final String PROMPT_TXT = "prompt.txt";
     private static final String TOKEN_TXT = "token.txt";
@@ -69,12 +67,11 @@ public class StartViewController {
     public void initialize() {
         var aiModels = Arrays.stream(AIModel.values()).map(AIModel::getLabel).toList();
         var speechToTextModels = Arrays.stream(SpeechToTextModel.values()).map(SpeechToTextModel::getLabel).toList();
-        var interviewLanguages = Arrays.stream(Language.values()).map(Language::getLabel).toList();
 
         aiModelComboBox.getItems().addAll(aiModels);
         speechToTextModelComboBox.getItems().addAll(speechToTextModels);
-        mainLanguageComboBox.getItems().addAll(interviewLanguages);
-        secondLanguageComboBox.getItems().addAll(interviewLanguages);
+        mainLanguageComboBox.getItems().addAll(Language.values());
+        secondLanguageComboBox.getItems().addAll(Language.values());
 
         aiModelComboBox.setValue(SELECT_AI_MODEL);
         var aiModelTooltip = new Tooltip("Select the AI model to use");
@@ -84,11 +81,11 @@ public class StartViewController {
         var speechToTextModelTooltip = new Tooltip("Select the Speech To Text model to use");
         speechToTextModelComboBox.setTooltip(speechToTextModelTooltip);
 
-        mainLanguageComboBox.setValue(SELECT_MAIN_LANGUAGE);
+        mainLanguageComboBox.setValue(Language.ENGLISH);
         var mainLanguageTooltip = new Tooltip("Select the main language for the interview");
         mainLanguageComboBox.setTooltip(mainLanguageTooltip);
 
-        secondLanguageComboBox.setValue(SELECT_SECOND_LANGUAGE);
+        secondLanguageComboBox.setValue(Language.ENGLISH);
         var secondLanguageTooltip = new Tooltip("Select the second language for the interview");
         secondLanguageComboBox.setTooltip(secondLanguageTooltip);
 

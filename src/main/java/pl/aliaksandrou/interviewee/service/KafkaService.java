@@ -6,7 +6,11 @@ import javafx.scene.text.Text;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import pl.aliaksandrou.interviewee.config.KafkaConsumerProperties;
+import pl.aliaksandrou.interviewee.config.KafkaProducerProperties;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -52,7 +56,7 @@ public class KafkaService {
     }
 
     private void consume(String topic, TextArea textArea) {
-        try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(new KafkaConsumerProperties().getKafkaProperties())) {
+        try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(KafkaConsumerProperties.getInstance().getKafkaProperties())) {
             consumer.subscribe(Collections.singletonList(topic));
 
             while (running) {
@@ -74,5 +78,12 @@ public class KafkaService {
 
     public void stopConsume() {
         running = false;
+    }
+
+    public void produce(String topic, String message) {
+        Producer<String, String> producer = new KafkaProducer<>(KafkaProducerProperties.getInstance().getKafkaProperties());
+        producer.send(new ProducerRecord<>(topic, message));
+
+        producer.close();
     }
 }

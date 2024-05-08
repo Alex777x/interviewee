@@ -1,11 +1,20 @@
 package pl.aliaksandrou.interviewee.config;
 
-import lombok.AllArgsConstructor;
-
 import java.util.Properties;
 
-@AllArgsConstructor
 public class KafkaConsumerProperties {
+
+    private static KafkaConsumerProperties instance;
+
+    private KafkaConsumerProperties() {
+    }
+
+    public static KafkaConsumerProperties getInstance() {
+        if (instance == null) {
+            instance = new KafkaConsumerProperties();
+        }
+        return instance;
+    }
 
     public Properties getKafkaProperties() {
         Properties properties = new Properties();
@@ -17,5 +26,4 @@ public class KafkaConsumerProperties {
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         return properties;
     }
-
 }

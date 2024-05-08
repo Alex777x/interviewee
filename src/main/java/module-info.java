@@ -13,6 +13,7 @@ module pl.aliaksandrou.interviewee {
     requires annotations;
     requires java.net.http;
     requires okhttp3;
+    requires com.fasterxml.jackson.databind;
 
     opens pl.aliaksandrou.interviewee.view to javafx.fxml;
     exports pl.aliaksandrou.interviewee;
@@ -22,4 +23,5 @@ module pl.aliaksandrou.interviewee {
     exports pl.aliaksandrou.interviewee.audioprocessor;
     exports pl.aliaksandrou.interviewee.speechtotext;
     exports pl.aliaksandrou.interviewee.exceptions;
+    exports pl.aliaksandrou.interviewee.enums;
 }
