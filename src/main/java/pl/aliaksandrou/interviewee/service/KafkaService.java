@@ -2,6 +2,7 @@ package pl.aliaksandrou.interviewee.service;
 
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -31,7 +32,8 @@ public class KafkaService {
     public void startKafkaBroker(TextArea questionTextArea,
                                  TextArea translatedQuestionTextArea,
                                  TextArea answerTextArea,
-                                 TextArea translatedAnswerTextArea) {
+                                 TextArea translatedAnswerTextArea,
+                                 Text readyText) {
         try {
             var scriptPath = "./start-kafka.sh";
             var processBuilder = new ProcessBuilder("/bin/bash", scriptPath);
@@ -42,6 +44,7 @@ public class KafkaService {
             new Thread(() -> consume(TRANSLATED_QUESTION_TOPIC, translatedQuestionTextArea)).start();
             new Thread(() -> consume(ANSWER_TOPIC, answerTextArea)).start();
             new Thread(() -> consume(TRANSLATED_ANSWER_TOPIC, translatedAnswerTextArea)).start();
+            Platform.runLater(() -> readyText.setStyle("-fx-fill: green"));
         } catch (Exception e) {
             log.error("Error while starting the Kafka", e);
         }

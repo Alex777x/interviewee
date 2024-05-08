@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
+import javafx.scene.text.Text;
 import lombok.extern.log4j.Log4j2;
 import pl.aliaksandrou.interviewee.audiointerceptor.IAudioProcessor;
 import pl.aliaksandrou.interviewee.enums.AIModel;
@@ -49,6 +50,8 @@ public class StartViewController {
     private Button startButton;
     @FXML
     private Button stopButton;
+    @FXML
+    private Text readyText;
 
     private boolean isInterviewStarted = false;
     private static final String PROMPT_TXT = "prompt.txt";
@@ -93,7 +96,9 @@ public class StartViewController {
                 questionTextArea,
                 translatedQuestionTextArea,
                 answerTextArea,
-                translatedAnswerTextArea));
+                translatedAnswerTextArea,
+                readyText)
+        );
     }
 
     @FXML

@@ -2,6 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.text.Text?>
 <VBox xmlns:fx="http://javafx.com/fxml" styleClass="vbox-spacing"
       fx:controller="pl.aliaksandrou.interviewee.view.StartViewController" stylesheets="@styles.css">
     <HBox styleClass="hbox-spacing">
@@ -9,6 +10,7 @@
         <ComboBox fx:id="speechToTextModelComboBox"/>
         <ComboBox fx:id="mainLanguageComboBox"/>
         <ComboBox fx:id="secondLanguageComboBox"/>
+        <Text fx:id="readyText" text="Ready?" style="-fx-fill: red;"/>
     </HBox>
     <HBox styleClass="hbox-spacing">
         <Button fx:id="startButton" text="Start" onAction="#startInterview" styleClass="start-button"/>
