@@ -17,5 +17,7 @@ module pl.aliaksandrou.interviewee {
     exports pl.aliaksandrou.interviewee.view to javafx.fxml;
     exports pl.aliaksandrou.interviewee.service;
     exports pl.aliaksandrou.interviewee.model;
-    exports pl.aliaksandrou.interviewee.audiointerceptor;
+    exports pl.aliaksandrou.interviewee.audioprocessor;
+    exports pl.aliaksandrou.interviewee.speechtotext;
+    exports pl.aliaksandrou.interviewee.exceptions;
 }

@@ -1,8 +1,10 @@
-package pl.aliaksandrou.interviewee.audiointerceptor;
+
+package pl.aliaksandrou.interviewee.audioprocessor;
+
 
 import pl.aliaksandrou.interviewee.model.InterviewParams;
 
-public class WindowsAudioProcessor implements IAudioProcessor {
+public class LinuxAudioProcessor implements IAudioProcessor {
 
     @Override
     public void startProcessing(InterviewParams interviewParams) {

@@ -1,4 +1,4 @@
-package pl.aliaksandrou.interviewee.audiointerceptor;
+package pl.aliaksandrou.interviewee.audioprocessor;
 
 
 import lombok.extern.log4j.Log4j2;
@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleMixerException;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleNotFoundException;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
+import pl.aliaksandrou.interviewee.service.Util;
 
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
@@ -36,7 +37,8 @@ public class MacAudioProcessor implements IAudioProcessor {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = targetDataLine.read(buffer, 0, buffer.length)) != -1 && isRunning) {
-                    checkAmplitude(buffer, bytesRead);
+                    var audioFileByAmplitude = getAudioFileByAmplitude(buffer, bytesRead);
+                    processAudioFileAsync(audioFileByAmplitude, interviewParams);
                     if (isRecording) {
                         writeToFile(buffer, 0, bytesRead);
                     }
@@ -76,7 +78,7 @@ public class MacAudioProcessor implements IAudioProcessor {
     }
 
     //    ChatGPT magic here
-    private void checkAmplitude(byte[] buffer, int bytesRead) throws IOException {
+    private File getAudioFileByAmplitude(byte[] buffer, int bytesRead) throws IOException {
         int i = 0;
         while (i < bytesRead) {
             int sample = (buffer[i + 1] << 8) | (buffer[i] & 0xFF);
@@ -89,11 +91,12 @@ public class MacAudioProcessor implements IAudioProcessor {
             } else {
                 silentSamples++;
                 if (isRecording && silentSamples > 2 * SAMPLE_RATE) {
-                    stopRecording();
+                    return stopRecording();
                 }
             }
             i += 2;
         }
+        return null;
     }
 
     private void startRecording() {
@@ -102,21 +105,26 @@ public class MacAudioProcessor implements IAudioProcessor {
         silentSamples = 0;
     }
 
-    private void stopRecording() throws IOException {
+    private File stopRecording() throws IOException {
         isRecording = false;
-        byte[] audioBytes = bos.toByteArray();
-        AudioInputStream audioInputStream = new AudioInputStream(new ByteArrayInputStream(audioBytes), FORMAT, audioBytes.length);
-        File audioFile = new File("audio" + fileNumber + ".wav");
+        var audioBytes = bos.toByteArray();
+        var audioInputStream = new AudioInputStream(new ByteArrayInputStream(audioBytes), FORMAT, audioBytes.length);
+        var audioFile = new File("audio" + fileNumber + ".wav");
         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
         fileNumber++;
 
-        processAudioFileAsync(audioFile);
+        return audioFile;
     }
 
-    private void processAudioFileAsync(File audioFile) {
+    private void processAudioFileAsync(File audioFile, InterviewParams interviewParams) {
+        if (audioFile == null) {
+            return;
+        }
+        var speechToTextRecognizer = Util.getSpeechToTextRecognizer(interviewParams.getSpeechToTextModel());
         new Thread(() -> {
             // do your asynchronous operations here
-            sendAudioToChatGPT4(audioFile);
+            speechToTextRecognizer.recognize(audioFile, interviewParams.getMainInterviewLanguage(), interviewParams.getTokenApi());
+//            sendAudioToChatGPT4(audioFile);
         }).start();
     }
 
