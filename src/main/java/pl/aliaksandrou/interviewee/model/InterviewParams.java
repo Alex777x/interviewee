@@ -3,6 +3,7 @@ package pl.aliaksandrou.interviewee.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import pl.aliaksandrou.interviewee.enums.Language;
 import pl.aliaksandrou.interviewee.exceptions.ParamsValidationException;
 
@@ -10,6 +11,7 @@ import static pl.aliaksandrou.interviewee.view.StartViewController.*;
 
 @Builder
 @Getter
+@ToString
 @AllArgsConstructor
 public class InterviewParams {
     private String aIModel;
@@ -17,6 +19,7 @@ public class InterviewParams {
     private Language mainInterviewLanguage;
     private Language secondInterviewLanguage;
     private String prompt;
+    @ToString.Exclude
     private String tokenApi;
 
     public void validateInterviewParams() throws ParamsValidationException {

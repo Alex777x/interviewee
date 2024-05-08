@@ -23,11 +23,11 @@
                   wrapText="true"/>
     </HBox>
     <HBox styleClass="hbox-spacing" VBox.vgrow="ALWAYS">
-        <TextArea fx:id="questionTextArea" HBox.hgrow="ALWAYS" editable="false"/>
-        <TextArea fx:id="translatedQuestionTextArea" HBox.hgrow="ALWAYS" editable="false"/>
+        <TextArea fx:id="questionTextArea" HBox.hgrow="ALWAYS" editable="false" wrapText="true"/>
+        <TextArea fx:id="translatedQuestionTextArea" HBox.hgrow="ALWAYS" editable="false" wrapText="true"/>
     </HBox>
     <HBox styleClass="hbox-spacing" VBox.vgrow="ALWAYS">
-        <TextArea fx:id="answerTextArea" HBox.hgrow="ALWAYS" editable="false"/>
-        <TextArea fx:id="translatedAnswerTextArea" HBox.hgrow="ALWAYS" editable="false"/>
+        <TextArea fx:id="answerTextArea" HBox.hgrow="ALWAYS" editable="false" wrapText="true"/>
+        <TextArea fx:id="translatedAnswerTextArea" HBox.hgrow="ALWAYS" editable="false" wrapText="true"/>
     </HBox>
 </VBox>

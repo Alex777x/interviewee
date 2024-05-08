@@ -16,6 +16,8 @@ module pl.aliaksandrou.interviewee {
     requires com.fasterxml.jackson.databind;
 
     opens pl.aliaksandrou.interviewee.view to javafx.fxml;
+    opens pl.aliaksandrou.interviewee.model to com.fasterxml.jackson.databind;
+    opens pl.aliaksandrou.interviewee.model.chatgpt to com.fasterxml.jackson.databind;
     exports pl.aliaksandrou.interviewee;
     exports pl.aliaksandrou.interviewee.view to javafx.fxml;
     exports pl.aliaksandrou.interviewee.service;

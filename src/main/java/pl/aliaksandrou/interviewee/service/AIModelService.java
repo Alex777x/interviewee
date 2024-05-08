@@ -31,7 +31,7 @@ public class AIModelService {
             recognizedText = new ObjectMapper().readValue(recognizedJson, RecognizedText.class).getText();
             kafkaService.produce(QUESTION_TOPIC, recognizedText);
         } catch (IOException e) {
-            log.error("Error while recognizing audio file with params: {}", interviewParams);
+            log.error("Error while recognizing audio file with params: {}, ERROR: {}", interviewParams, e);
         }
 
         if (recognizedText == null) {
@@ -41,19 +41,21 @@ public class AIModelService {
         var chatAI = Util.getChatAI(interviewParams.getAIModel());
 
         var question = recognizedText;
+        addEntry(new Message("user", question));
+
         CompletableFuture.supplyAsync(() -> {
             var translatedQuestion = chatAI.getTranslatedQuestion(question, interviewParams.getSecondInterviewLanguage().getCode());
             kafkaService.produce(TRANSLATED_QUESTION_TOPIC, translatedQuestion);
-            addEntry(new Message("user", translatedQuestion));
             return translatedQuestion;
         });
 
         CompletableFuture<String> answerFuture = CompletableFuture.supplyAsync(() -> {
             String answer = null;
             try {
-                answer = chatAI.getAnswer(question, lastTenMessages, interviewParams.getPrompt(), interviewParams.getTokenApi());
+                var messagesCopy = new LinkedList<>(lastTenMessages);
+                answer = chatAI.getAnswer(question, messagesCopy, interviewParams.getPrompt(), interviewParams.getTokenApi());
             } catch (IOException e) {
-                log.error("Error while getting answer for question: {}", question);
+                log.error("Error while getting answer for question: {}, ERROR: {}", question, e);
             }
             kafkaService.produce(ANSWER_TOPIC, answer);
             addEntry(new Message("assistant", answer));
