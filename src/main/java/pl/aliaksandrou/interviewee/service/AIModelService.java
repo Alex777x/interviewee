@@ -49,7 +49,12 @@ public class AIModelService {
         });
 
         CompletableFuture<String> answerFuture = CompletableFuture.supplyAsync(() -> {
-            var answer = chatAI.getAnswer(question, lastTenMessages);
+            String answer = null;
+            try {
+                answer = chatAI.getAnswer(question, lastTenMessages, interviewParams.getPrompt(), interviewParams.getTokenApi());
+            } catch (IOException e) {
+                log.error("Error while getting answer for question: {}", question);
+            }
             kafkaService.produce(ANSWER_TOPIC, answer);
             addEntry(new Message("assistant", answer));
             return answer;
