@@ -10,6 +10,7 @@ module pl.aliaksandrou.interviewee {
     requires java.desktop;
     requires org.apache.logging.log4j;
     requires kafka.clients;
+    requires annotations;
 
     opens pl.aliaksandrou.interviewee.view to javafx.fxml;
     exports pl.aliaksandrou.interviewee;

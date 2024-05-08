@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import pl.aliaksandrou.interviewee.config.KafkaConsumerProperties;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static pl.aliaksandrou.interviewee.config.KafkaTopics.*;
@@ -58,8 +59,14 @@ public class KafkaService {
                 var records = consumer.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, String> consumerRecord : records) {
                     var message = consumerRecord.value();
-                    // Update TextArea on the JavaFX Application Thread
-                    Platform.runLater(() -> textArea.setText(message));
+                    Platform.runLater(() -> {
+                        textArea.appendText(message + "\n");
+                        String[] lines = textArea.getText().split("\n");
+                        if (lines.length > 10) {
+                            String[] last10Lines = Arrays.copyOfRange(lines, lines.length - 10, lines.length);
+                            textArea.setText(String.join("\n", last10Lines));
+                        }
+                    });
                 }
             }
         }
