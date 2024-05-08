@@ -1,23 +1,18 @@
 package pl.aliaksandrou.interviewee.audioprocessor;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleMixerException;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleNotFoundException;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
-import pl.aliaksandrou.interviewee.model.RecognizedText;
-import pl.aliaksandrou.interviewee.service.KafkaService;
-import pl.aliaksandrou.interviewee.service.Util;
+import pl.aliaksandrou.interviewee.service.AIModelService;
 
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-
-import static pl.aliaksandrou.interviewee.config.KafkaTopics.QUESTION_TOPIC;
 
 @Log4j2
 public class MacAudioProcessor implements IAudioProcessor {
@@ -26,7 +21,6 @@ public class MacAudioProcessor implements IAudioProcessor {
     private boolean isRunning = true;
     private int silentSamples = 0;
     private final int threshold = 200;
-    private final KafkaService kafkaService = KafkaService.getInstance();
     private static final float SAMPLE_RATE = 44100f;
     private static final AudioFormat FORMAT = new AudioFormat(SAMPLE_RATE, 16, 2, true, false);
 
@@ -42,7 +36,7 @@ public class MacAudioProcessor implements IAudioProcessor {
                 int bytesRead;
                 while ((bytesRead = targetDataLine.read(buffer, 0, buffer.length)) != -1 && isRunning) {
                     var audioFileByAmplitude = getAudioFileByAmplitude(buffer, bytesRead);
-                    processAudioFileAsync(audioFileByAmplitude, interviewParams);
+                    new AIModelService().processAudioFileAsync(audioFileByAmplitude, interviewParams);
                     if (isRecording) {
                         writeToFile(buffer, 0, bytesRead);
                     }
@@ -87,7 +81,7 @@ public class MacAudioProcessor implements IAudioProcessor {
         while (i < bytesRead) {
             int sample = (buffer[i + 1] << 8) | (buffer[i] & 0xFF);
             log.debug("Amplitude: {}", sample);
-//            System.out.println("AAmplitude: " + sample);
+//            System.out.println("Amplitude: " + sample);
             if (sample > threshold) {
                 silentSamples = 0;
                 if (!isRecording) {
@@ -118,24 +112,6 @@ public class MacAudioProcessor implements IAudioProcessor {
         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
 
         return audioFile;
-    }
-
-    private void processAudioFileAsync(File audioFile, InterviewParams interviewParams) {
-        if (audioFile == null) {
-            return;
-        }
-        var speechToTextRecognizer = Util.getSpeechToTextRecognizer(interviewParams.getSpeechToTextModel());
-        String recognizedText = null;
-//        new Thread(() -> {
-        try {
-            var recognizedJson = speechToTextRecognizer.recognize(audioFile, interviewParams.getMainInterviewLanguage(), interviewParams.getTokenApi());
-            recognizedText = new ObjectMapper().readValue(recognizedJson, RecognizedText.class).getText();
-            kafkaService.produce(QUESTION_TOPIC, recognizedText);
-        } catch (IOException e) {
-            log.error("Error while recognizing audio file with params: {}", interviewParams);
-        }
-//        }).start();
-
     }
 
     private void writeToFile(byte[] buffer, int off, int len) {

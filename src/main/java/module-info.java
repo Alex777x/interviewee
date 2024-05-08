@@ -24,4 +24,5 @@ module pl.aliaksandrou.interviewee {
     exports pl.aliaksandrou.interviewee.speechtotext;
     exports pl.aliaksandrou.interviewee.exceptions;
     exports pl.aliaksandrou.interviewee.enums;
+    exports pl.aliaksandrou.interviewee.aichat;
 }
