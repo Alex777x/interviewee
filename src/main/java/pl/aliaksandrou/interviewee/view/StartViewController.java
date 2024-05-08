@@ -125,15 +125,14 @@ public class StartViewController {
                 .build();
         try {
             interviewParams.validateInterviewParams();
+            executor.submit(() -> audioProcessor.startProcessing(interviewParams));
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("An error occurred:");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-            return;
         }
-        executor.submit(() -> audioProcessor.startProcessing(interviewParams));
     }
 
     private void savePromptAndToken() {

@@ -123,7 +123,12 @@ public class MacAudioProcessor implements IAudioProcessor {
         var speechToTextRecognizer = Util.getSpeechToTextRecognizer(interviewParams.getSpeechToTextModel());
         new Thread(() -> {
             // do your asynchronous operations here
-            speechToTextRecognizer.recognize(audioFile, interviewParams.getMainInterviewLanguage(), interviewParams.getTokenApi());
+            try {
+                String recognizedText = speechToTextRecognizer.recognize(audioFile, interviewParams.getMainInterviewLanguage(), interviewParams.getTokenApi());
+                System.out.println(recognizedText);
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 //            sendAudioToChatGPT4(audioFile);
         }).start();
     }

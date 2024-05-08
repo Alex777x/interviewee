@@ -11,6 +11,7 @@ module pl.aliaksandrou.interviewee {
     requires org.apache.logging.log4j;
     requires kafka.clients;
     requires annotations;
+    requires java.net.http;
 
     opens pl.aliaksandrou.interviewee.view to javafx.fxml;
     exports pl.aliaksandrou.interviewee;
