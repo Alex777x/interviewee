@@ -24,6 +24,9 @@ if [ ! -z "$KAFKA_PID" ]; then
     kill -9 $KAFKA_PID
 fi
 
+# Wait for a moment to ensure Zookeeper and Kafka processes are killed
+sleep 5
+
 echo "Start Zookeeper service"
 ./kafka_2.13-"$KAFKA_VERSION"/bin/zookeeper-server-start.sh ./kafka_2.13-"$KAFKA_VERSION"/config/zookeeper.properties &
 while ! nc -z localhost 2181; do sleep 1; done

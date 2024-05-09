@@ -91,6 +91,7 @@ public class StartViewController {
         tokenApiTextField.setText(readFile(TOKEN_TXT));
 
         stopButton.setDisable(true);
+        readyText.setText("If this text is red, please restart the app;\nif it is green, everything is OK.");
 
         executor.submit(() -> kafkaService.startKafkaBroker(
                 questionTextArea,
