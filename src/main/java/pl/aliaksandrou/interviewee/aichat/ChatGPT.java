@@ -22,7 +22,8 @@ public class ChatGPT implements IChatAI {
 
     @Override
     public String getTranslatedText(String question, String languageCode, String tokenApi) throws IOException {
-        var system = new Message("system", "Please translate this text to: " + languageCode + " language.");
+        var system = new Message("system", "Please translate this text to: " + languageCode + " language." +
+                " Do not translate jargon or technical words.");
         var user = new Message("user", question);
         List<Message> messages = new LinkedList<>();
         messages.addLast(system);

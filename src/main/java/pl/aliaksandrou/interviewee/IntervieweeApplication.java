@@ -27,6 +27,7 @@ public class IntervieweeApplication extends Application {
         var kafkaService = KafkaService.getInstance();
         super.stop();
         try {
+//            Runtime.getRuntime().addShutdownHook(new Thread(kafkaService::closeProducer));
             kafkaService.stopConsume();
             var scriptPath = "./stop-kafka.sh";
             var processBuilder = new ProcessBuilder("/bin/bash", scriptPath);

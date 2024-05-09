@@ -2,6 +2,7 @@ package pl.aliaksandrou.interviewee.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.Logger;
+import pl.aliaksandrou.interviewee.aichat.IChatAI;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
 import pl.aliaksandrou.interviewee.model.Message;
 import pl.aliaksandrou.interviewee.model.RecognizedText;
@@ -23,61 +24,67 @@ public class AIModelService {
         if (audioFile == null) {
             return;
         }
+
         var speechToTextRecognizer = Util.getSpeechToTextRecognizer(interviewParams.getSpeechToTextModel());
-        String recognizedText = null;
-
-        try {
-            var recognizedJson = speechToTextRecognizer.recognize(audioFile, interviewParams.getMainInterviewLanguage(), interviewParams.getTokenApi());
-            recognizedText = new ObjectMapper().readValue(recognizedJson, RecognizedText.class).getText();
-            kafkaService.produce(QUESTION_TOPIC, recognizedText);
-        } catch (IOException e) {
-            log.error("Error while recognizing audio file with params: {}, ERROR: {}", interviewParams, e);
-        }
-
-        if (recognizedText == null) {
-            return;
-        }
-
-        var chatAI = Util.getChatAI(interviewParams.getAIModel());
-
-        var question = recognizedText;
-        addEntry(new Message("user", question));
-
-        CompletableFuture<String> answerFuture = CompletableFuture.supplyAsync(() -> {
-            String answer = null;
+        CompletableFuture.supplyAsync(() -> {
             try {
-                var messagesCopy = new LinkedList<>(lastTenMessages);
-                answer = chatAI.getAnswer(question, messagesCopy, interviewParams.getPrompt(), interviewParams.getTokenApi());
+                var recognizedJson = speechToTextRecognizer.recognize(audioFile, interviewParams.getMainInterviewLanguage(), interviewParams.getTokenApi());
+                return new ObjectMapper().readValue(recognizedJson, RecognizedText.class).getText();
             } catch (IOException e) {
-                log.error("Error while getting answer for question: {}, ERROR: {}", question, e);
+                log.error("Error while recognizing audio file with params: {}, ERROR: {}", interviewParams, e);
+                return null;
             }
-            kafkaService.produce(ANSWER_TOPIC, answer);
-            addEntry(new Message("assistant", answer));
-            return answer;
+        }).thenApply(recognizedText -> {
+            if (recognizedText != null) {
+                kafkaService.produce(QUESTION_TOPIC, recognizedText);
+                addEntry(new Message("user", recognizedText));
+            }
+            return recognizedText;
+        }).thenCompose(question -> {
+            if (question == null) {
+                return CompletableFuture.completedFuture(null);
+            }
+
+            var chatAI = Util.getChatAI(interviewParams.getAIModel());
+            var messagesCopy = new LinkedList<>(lastTenMessages);
+
+            return CompletableFuture.supplyAsync(() -> {
+                try {
+                    return chatAI.getAnswer(question, messagesCopy, interviewParams.getPrompt(), interviewParams.getTokenApi());
+                } catch (IOException e) {
+                    log.error("Error while getting answer for question: {}, ERROR: {}", question, e);
+                    return null;
+                }
+            }).thenApply(answer -> {
+                kafkaService.produce(ANSWER_TOPIC, answer);
+                addEntry(new Message("assistant", answer));
+                return new String[]{question, answer};
+            });
+        }).thenAcceptAsync(questionAndAnswer -> {
+            if (questionAndAnswer == null) return;
+
+            var question = questionAndAnswer[0];
+            var answer = questionAndAnswer[1];
+
+            if (!interviewParams.isDoNotTranslate() && !interviewParams.getMainInterviewLanguage().equals(interviewParams.getSecondInterviewLanguage())) {
+                var chatAI = Util.getChatAI(interviewParams.getAIModel());
+                translateText(interviewParams, question, chatAI, TRANSLATED_QUESTION_TOPIC);
+                translateText(interviewParams, answer, chatAI, TRANSLATED_ANSWER_TOPIC);
+            }
         });
+    }
 
-        if (interviewParams.isDoNotTranslate() || interviewParams.getMainInterviewLanguage().equals(interviewParams.getSecondInterviewLanguage())) {
-            CompletableFuture.supplyAsync(() -> {
-                String translatedQuestion = null;
-                try {
-                    translatedQuestion = chatAI.getTranslatedText(question, interviewParams.getSecondInterviewLanguage().getCode(), interviewParams.getTokenApi());
-                } catch (IOException e) {
-                    log.error("Error while translating text: {}, ERROR: {}", question, e);
-                }
-                kafkaService.produce(TRANSLATED_QUESTION_TOPIC, translatedQuestion);
-                return translatedQuestion;
-            });
-
-            answerFuture.thenAcceptAsync(answer -> {
-                String translatedAnswer = null;
-                try {
-                    translatedAnswer = chatAI.getTranslatedText(answer, interviewParams.getSecondInterviewLanguage().getCode(), interviewParams.getTokenApi());
-                } catch (IOException e) {
-                    log.error("Error while translating text: {}, ERROR: {}", answer, e);
-                }
-                kafkaService.produce(TRANSLATED_ANSWER_TOPIC, translatedAnswer);
-            });
-        }
+    private void translateText(InterviewParams interviewParams, String question, IChatAI chatAI, String translatedQuestionTopic) {
+        CompletableFuture.supplyAsync(() -> {
+            String translatedQuestion = null;
+            try {
+                translatedQuestion = chatAI.getTranslatedText(question, interviewParams.getSecondInterviewLanguage().getCode(), interviewParams.getTokenApi());
+            } catch (IOException e) {
+                log.error("Error while translating text: {}, ERROR: {}", question, e);
+            }
+            kafkaService.produce(translatedQuestionTopic, translatedQuestion);
+            return translatedQuestion;
+        });
     }
 
     private void addEntry(Message entry) {

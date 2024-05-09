@@ -15,21 +15,28 @@ import pl.aliaksandrou.interviewee.config.KafkaProducerProperties;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static pl.aliaksandrou.interviewee.config.KafkaTopics.*;
 
 public class KafkaService {
 
     private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(KafkaService.class);
-    private static KafkaService instance;
-    private volatile boolean running = true;
+    private static volatile KafkaService instance;
+    private final AtomicBoolean running = new AtomicBoolean(true);
 
     private KafkaService() {
     }
 
     public static KafkaService getInstance() {
         if (instance == null) {
-            instance = new KafkaService();
+            synchronized (KafkaService.class) {
+                if (instance == null) {
+                    instance = new KafkaService();
+                }
+            }
         }
         return instance;
     }
@@ -60,31 +67,36 @@ public class KafkaService {
         try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(KafkaConsumerProperties.getInstance().getKafkaProperties())) {
             consumer.subscribe(Collections.singletonList(topic));
 
-            while (running) {
+            while (running.get()) {
                 var records = consumer.poll(Duration.ofMillis(100));
+                List<String> messages = new LinkedList<>();
                 for (ConsumerRecord<String, String> consumerRecord : records) {
                     var message = consumerRecord.value();
-                    Platform.runLater(() -> {
-                        textArea.appendText("\n---\n" + message + "\n");
-                        String[] lines = textArea.getText().split("\n");
-                        if (lines.length > 30) {
-                            String[] last10Messages = Arrays.copyOfRange(lines, lines.length - 30, lines.length);
-                            textArea.setText(String.join("\n", last10Messages));
-                        }
-                    });
+                    messages.add("\n---\n" + message + "\n");
                 }
+                Platform.runLater(() -> {
+                    textArea.appendText(String.join("", messages));
+                    String[] lines = textArea.getText().split("\n");
+                    if (lines.length > 30) {
+                        String[] last30Messages = Arrays.copyOfRange(lines, lines.length - 30, lines.length);
+                        textArea.setText(String.join("\n", last30Messages));
+                    }
+                });
             }
         }
     }
 
     public void stopConsume() {
-        running = false;
+        running.set(false);
     }
 
     public void produce(String topic, String message) {
-        Producer<String, String> producer = new KafkaProducer<>(KafkaProducerProperties.getInstance().getKafkaProperties());
+        final Producer<String, String> producer = new KafkaProducer<>(KafkaProducerProperties.getInstance().getKafkaProperties());
         producer.send(new ProducerRecord<>(topic, message));
-
         producer.close();
     }
+
+//    public void closeProducer() {
+//        producer.close();
+//    }
 }
