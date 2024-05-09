@@ -26,6 +26,7 @@ public class MacAudioProcessor implements IAudioProcessor {
 
     @Override
     public void startProcessing(InterviewParams interviewParams) {
+        isRunning = true;
         try {
             Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
             Mixer.Info blackHole = getBlackHole(mixerInfos);

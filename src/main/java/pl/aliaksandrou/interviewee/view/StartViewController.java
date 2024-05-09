@@ -131,6 +131,12 @@ public class StartViewController {
         isInterviewStarted = true;
         stopButton.setDisable(false);
         startButton.setDisable(true);
+        aiModelComboBox.setDisable(true);
+        speechToTextModelComboBox.setDisable(true);
+        mainLanguageComboBox.setDisable(true);
+        secondLanguageComboBox.setDisable(true);
+        tokenApiTextField.setDisable(true);
+        doNotTranslateCheckBox.setDisable(true);
     }
 
     private void savePromptAndToken() {
@@ -152,7 +158,13 @@ public class StartViewController {
         startButton.setDisable(false);
         audioProcessor.stopProcessing();
         executor.submit(audioProcessor::stopProcessing);
-        executor.submit(kafkaService::stopConsume);
+//        executor.submit(kafkaService::stopConsume);
+        aiModelComboBox.setDisable(false);
+        speechToTextModelComboBox.setDisable(false);
+        mainLanguageComboBox.setDisable(false);
+        secondLanguageComboBox.setDisable(false);
+        tokenApiTextField.setDisable(false);
+        doNotTranslateCheckBox.setDisable(false);
     }
 
     private String readFile(String path) {

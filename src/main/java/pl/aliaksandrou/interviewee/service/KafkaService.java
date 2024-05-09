@@ -65,11 +65,11 @@ public class KafkaService {
                 for (ConsumerRecord<String, String> consumerRecord : records) {
                     var message = consumerRecord.value();
                     Platform.runLater(() -> {
-                        textArea.appendText(message + "\n");
+                        textArea.appendText("\n---\n" + message + "\n");
                         String[] lines = textArea.getText().split("\n");
-                        if (lines.length > 10) {
-                            String[] last10Lines = Arrays.copyOfRange(lines, lines.length - 10, lines.length);
-                            textArea.setText(String.join("\n", last10Lines));
+                        if (lines.length > 30) {
+                            String[] last10Messages = Arrays.copyOfRange(lines, lines.length - 30, lines.length);
+                            textArea.setText(String.join("\n", last10Messages));
                         }
                     });
                 }

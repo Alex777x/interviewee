@@ -1,8 +1,10 @@
 package pl.aliaksandrou.interviewee.model.chatgpt;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.aliaksandrou.interviewee.model.Message;
 
 public class Choice {
+    @JsonProperty("finish_reason")
     private String finishReason;
     private int index;
     private Message message;
