@@ -1,7 +1,7 @@
 package pl.aliaksandrou.interviewee.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Logger;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
 import pl.aliaksandrou.interviewee.model.Message;
 import pl.aliaksandrou.interviewee.model.RecognizedText;
@@ -13,9 +13,9 @@ import java.util.concurrent.CompletableFuture;
 
 import static pl.aliaksandrou.interviewee.config.KafkaTopics.*;
 
-@Log4j2
 public class AIModelService {
 
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AIModelService.class);
     private final KafkaService kafkaService = KafkaService.getInstance();
     private final LinkedList<Message> lastTenMessages = new LinkedList<>();
 

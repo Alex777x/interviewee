@@ -6,7 +6,6 @@ module pl.aliaksandrou.interviewee {
     requires org.kordamp.bootstrapfx.core;
 
     requires kotlin.stdlib;
-    requires static lombok;
     requires java.desktop;
     requires org.apache.logging.log4j;
     requires kafka.clients;

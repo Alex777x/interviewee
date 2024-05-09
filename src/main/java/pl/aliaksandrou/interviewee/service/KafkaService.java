@@ -3,12 +3,12 @@ package pl.aliaksandrou.interviewee.service;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
-import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.logging.log4j.Logger;
 import pl.aliaksandrou.interviewee.config.KafkaConsumerProperties;
 import pl.aliaksandrou.interviewee.config.KafkaProducerProperties;
 
@@ -18,9 +18,9 @@ import java.util.Collections;
 
 import static pl.aliaksandrou.interviewee.config.KafkaTopics.*;
 
-@Log4j2
 public class KafkaService {
 
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(KafkaService.class);
     private static KafkaService instance;
     private volatile boolean running = true;
 

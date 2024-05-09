@@ -1,16 +1,36 @@
 package pl.aliaksandrou.interviewee.model.chatgpt;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import pl.aliaksandrou.interviewee.model.Message;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Choice {
-    public String finish_reason;
-    public int index;
-    public Message message;
-    public Object logprobs;
+    private String finishReason;
+    private int index;
+    private Message message;
+    private Object logprobs;
+
+    public Choice(String finishReason, int index, Message message, Object logprobs) {
+        this.finishReason = finishReason;
+        this.index = index;
+        this.message = message;
+        this.logprobs = logprobs;
+    }
+
+    public Choice() {
+    }
+
+    public String getFinishReason() {
+        return this.finishReason;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
+    public Message getMessage() {
+        return this.message;
+    }
+
+    public Object getLogprobs() {
+        return this.logprobs;
+    }
 }

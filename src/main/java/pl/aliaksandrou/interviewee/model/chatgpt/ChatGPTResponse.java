@@ -1,21 +1,51 @@
 package pl.aliaksandrou.interviewee.model.chatgpt;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChatGPTResponse {
-    public ArrayList<Choice> choices;
-    public int created;
-    public String id;
-    public String model;
-    public String object;
-    public Usage usage;
+    private List<Choice> choices;
+    private int created;
+    private String id;
+    private String model;
+    private String object;
+    private Usage usage;
+
+    public ChatGPTResponse(List<Choice> choices, int created, String id, String model, String object, Usage usage) {
+        this.choices = choices;
+        this.created = created;
+        this.id = id;
+        this.model = model;
+        this.object = object;
+        this.usage = usage;
+    }
+
+    public ChatGPTResponse() {
+    }
+
+    public List<Choice> getChoices() {
+        return this.choices;
+    }
+
+    public int getCreated() {
+        return this.created;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public String getModel() {
+        return this.model;
+    }
+
+    public String getObject() {
+        return this.object;
+    }
+
+    public Usage getUsage() {
+        return this.usage;
+    }
 }

@@ -1,13 +1,9 @@
 package pl.aliaksandrou.interviewee.view;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Logger;
 import pl.aliaksandrou.interviewee.audioprocessor.IAudioProcessor;
 import pl.aliaksandrou.interviewee.enums.AIModel;
 import pl.aliaksandrou.interviewee.enums.Language;
@@ -24,9 +20,9 @@ import java.util.concurrent.Executors;
 
 import static pl.aliaksandrou.interviewee.service.Util.getAudioProcessor;
 
-@Log4j2
 public class StartViewController {
 
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(StartViewController.class);
     @FXML
     private ComboBox<String> aiModelComboBox;
     @FXML

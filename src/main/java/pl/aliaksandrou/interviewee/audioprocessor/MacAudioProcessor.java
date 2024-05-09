@@ -1,7 +1,7 @@
 package pl.aliaksandrou.interviewee.audioprocessor;
 
 
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleMixerException;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleNotFoundException;
@@ -14,8 +14,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-@Log4j2
 public class MacAudioProcessor implements IAudioProcessor {
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(MacAudioProcessor.class);
     private ByteArrayOutputStream bos;
     private boolean isRecording = false;
     private boolean isRunning = true;
@@ -38,7 +38,7 @@ public class MacAudioProcessor implements IAudioProcessor {
                     var audioFileByAmplitude = getAudioFileByAmplitude(buffer, bytesRead);
                     new AIModelService().processAudioFileAsync(audioFileByAmplitude, interviewParams);
                     if (isRecording) {
-                        writeToFile(buffer, 0, bytesRead);
+                        writeToFile(buffer, bytesRead);
                     }
                 }
                 targetDataLine.close();
@@ -81,7 +81,6 @@ public class MacAudioProcessor implements IAudioProcessor {
         while (i < bytesRead) {
             int sample = (buffer[i + 1] << 8) | (buffer[i] & 0xFF);
             log.debug("Amplitude: {}", sample);
-//            System.out.println("Amplitude: " + sample);
             if (sample > threshold) {
                 silentSamples = 0;
                 if (!isRecording) {
@@ -114,9 +113,9 @@ public class MacAudioProcessor implements IAudioProcessor {
         return audioFile;
     }
 
-    private void writeToFile(byte[] buffer, int off, int len) {
+    private void writeToFile(byte[] buffer, int len) {
         if (isRecording) {
-            bos.write(buffer, off, len);
+            bos.write(buffer, 0, len);
         }
     }
 }

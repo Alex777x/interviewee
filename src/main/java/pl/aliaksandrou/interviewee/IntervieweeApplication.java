@@ -4,13 +4,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Logger;
 import pl.aliaksandrou.interviewee.service.KafkaService;
 
 import java.io.IOException;
 
-@Log4j2
 public class IntervieweeApplication extends Application {
+
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(IntervieweeApplication.class);
 
     @Override
     public void start(Stage stage) throws IOException {

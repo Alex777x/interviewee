@@ -1,8 +1,6 @@
 package pl.aliaksandrou.interviewee.enums;
 
-import lombok.Getter;
 
-@Getter
 public enum Language {
     ENGLISH("en"),
     CHINESE("zh"),
@@ -96,5 +94,9 @@ public enum Language {
 
     Language(String code) {
         this.code = code;
+    }
+
+    public String getCode() {
+        return this.code;
     }
 }

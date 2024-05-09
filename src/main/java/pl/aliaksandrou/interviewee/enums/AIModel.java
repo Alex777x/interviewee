@@ -1,8 +1,6 @@
 package pl.aliaksandrou.interviewee.enums;
 
-import lombok.Getter;
 
-@Getter
 public enum AIModel {
     CHAT_GPT_4("ChatGPT-4");
 
@@ -12,4 +10,7 @@ public enum AIModel {
         this.label = label;
     }
 
+    public String getLabel() {
+        return this.label;
+    }
 }

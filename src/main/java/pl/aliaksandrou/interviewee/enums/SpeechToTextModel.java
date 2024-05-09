@@ -1,8 +1,6 @@
 package pl.aliaksandrou.interviewee.enums;
 
-import lombok.Getter;
 
-@Getter
 public enum SpeechToTextModel {
     OPEN_AI("OpenAI");
 
@@ -12,4 +10,7 @@ public enum SpeechToTextModel {
         this.label = label;
     }
 
+    public String getLabel() {
+        return this.label;
+    }
 }
