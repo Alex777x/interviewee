@@ -13,14 +13,22 @@ public class InterviewParams {
     private final Language secondInterviewLanguage;
     private final String prompt;
     private final String tokenApi;
+    private final boolean doNotTranslate;
 
-    public InterviewParams(String aIModel, String speechToTextModel, Language mainInterviewLanguage, Language secondInterviewLanguage, String prompt, String tokenApi) {
+    public InterviewParams(String aIModel,
+                           String speechToTextModel,
+                           Language mainInterviewLanguage,
+                           Language secondInterviewLanguage,
+                           String prompt,
+                           String tokenApi,
+                           boolean doNotTranslate) {
         this.aIModel = aIModel;
         this.speechToTextModel = speechToTextModel;
         this.mainInterviewLanguage = mainInterviewLanguage;
         this.secondInterviewLanguage = secondInterviewLanguage;
         this.prompt = prompt;
         this.tokenApi = tokenApi;
+        this.doNotTranslate = doNotTranslate;
     }
 
     public void validateInterviewParams() throws ParamsValidationException {
@@ -63,6 +71,9 @@ public class InterviewParams {
         return this.tokenApi;
     }
 
+    public boolean isDoNotTranslate() {
+        return this.doNotTranslate;
+    }
 
     public String toString() {
         return "InterviewParams(aIModel=" + this.getAIModel() + ", speechToTextModel=" + this.getSpeechToTextModel() + ", mainInterviewLanguage=" + this.getMainInterviewLanguage() + ", secondInterviewLanguage=" + this.getSecondInterviewLanguage() + ", prompt=" + this.getPrompt() + ")";

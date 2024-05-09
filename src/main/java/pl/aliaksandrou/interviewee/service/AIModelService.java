@@ -56,16 +56,28 @@ public class AIModelService {
             return answer;
         });
 
-        CompletableFuture.supplyAsync(() -> {
-            var translatedQuestion = chatAI.getTranslatedQuestion(question, interviewParams.getSecondInterviewLanguage().getCode());
-            kafkaService.produce(TRANSLATED_QUESTION_TOPIC, translatedQuestion);
-            return translatedQuestion;
-        });
+        if (interviewParams.isDoNotTranslate() || interviewParams.getMainInterviewLanguage().equals(interviewParams.getSecondInterviewLanguage())) {
+            CompletableFuture.supplyAsync(() -> {
+                String translatedQuestion = null;
+                try {
+                    translatedQuestion = chatAI.getTranslatedText(question, interviewParams.getSecondInterviewLanguage().getCode(), interviewParams.getTokenApi());
+                } catch (IOException e) {
+                    log.error("Error while translating text: {}, ERROR: {}", question, e);
+                }
+                kafkaService.produce(TRANSLATED_QUESTION_TOPIC, translatedQuestion);
+                return translatedQuestion;
+            });
 
-        answerFuture.thenAcceptAsync(answer -> {
-            var translatedAnswer = chatAI.getTranslatedAnswer(answer, interviewParams.getSecondInterviewLanguage().getCode());
-            kafkaService.produce(TRANSLATED_ANSWER_TOPIC, translatedAnswer);
-        });
+            answerFuture.thenAcceptAsync(answer -> {
+                String translatedAnswer = null;
+                try {
+                    translatedAnswer = chatAI.getTranslatedText(answer, interviewParams.getSecondInterviewLanguage().getCode(), interviewParams.getTokenApi());
+                } catch (IOException e) {
+                    log.error("Error while translating text: {}, ERROR: {}", answer, e);
+                }
+                kafkaService.produce(TRANSLATED_ANSWER_TOPIC, translatedAnswer);
+            });
+        }
     }
 
     private void addEntry(Message entry) {

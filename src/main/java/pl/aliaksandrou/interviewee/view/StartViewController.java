@@ -48,7 +48,7 @@ public class StartViewController {
     @FXML
     private Button stopButton;
     @FXML
-    private CheckBox needTranslateCheckBox;
+    private CheckBox doNotTranslateCheckBox;
     @FXML
     private Text readyText;
 
@@ -114,7 +114,8 @@ public class StartViewController {
                 mainLanguageComboBox.getValue(),
                 secondLanguageComboBox.getValue(),
                 promptTextField.getText(),
-                tokenApiTextField.getText()
+                tokenApiTextField.getText(),
+                doNotTranslateCheckBox.isSelected()
         );
         try {
             interviewParams.validateInterviewParams();
@@ -165,7 +166,7 @@ public class StartViewController {
 
     @FXML
     private void handleNeedTranslateCheckBoxAction() {
-        boolean needTranslate = needTranslateCheckBox.isSelected();
+        boolean needTranslate = doNotTranslateCheckBox.isSelected();
         translatedQuestionTextArea.setVisible(!needTranslate);
         translatedAnswerTextArea.setVisible(!needTranslate);
         translatedQuestionTextArea.setManaged(!needTranslate);

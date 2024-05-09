@@ -10,7 +10,7 @@
         <ComboBox fx:id="speechToTextModelComboBox"/>
         <ComboBox fx:id="mainLanguageComboBox"/>
         <ComboBox fx:id="secondLanguageComboBox"/>
-        <CheckBox fx:id="needTranslateCheckBox" text="Don't Translate" onAction="#handleNeedTranslateCheckBoxAction"/>
+        <CheckBox fx:id="doNotTranslateCheckBox" text="Don't Translate" onAction="#handleNeedTranslateCheckBoxAction"/>
         <Text fx:id="readyText" style="-fx-fill: red;"/>
     </HBox>
     <HBox styleClass="hbox-spacing">

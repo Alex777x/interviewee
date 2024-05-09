@@ -8,7 +8,5 @@ import java.util.LinkedList;
 public interface IChatAI {
     String getAnswer(String question, LinkedList<Message> lastTenMessages, String prompt, String tokenApi) throws IOException;
 
-    String getTranslatedQuestion(String question, String languageCode);
-
-    String getTranslatedAnswer(String originalAnswer, String languageCode);
+    String getTranslatedText(String question, String languageCode, String tokenApi) throws IOException;
 }
