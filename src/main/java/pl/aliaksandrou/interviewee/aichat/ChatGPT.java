@@ -16,10 +16,9 @@ public class ChatGPT implements IChatAI {
     @Override
     public String getAnswer(String question, LinkedList<Message> lastTenMessages, String prompt, String tokenApi) throws IOException {
         lastTenMessages.addFirst(new Message("system", prompt));
-        var chatRequest = ChatRequest.builder()
-                .model("gpt-3.5-turbo")
-                .messages(lastTenMessages)
-                .build();
+        var chatRequest = new ChatRequest();
+        chatRequest.setModel("gpt-3.5-turbo");
+        chatRequest.setMessages(lastTenMessages);
 
         var objectMapper = new ObjectMapper();
         String chatRequestJson = objectMapper.writeValueAsString(chatRequest);

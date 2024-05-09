@@ -14,10 +14,6 @@ public class ChatRequest {
     public ChatRequest() {
     }
 
-    public static ChatRequestBuilder builder() {
-        return new ChatRequestBuilder();
-    }
-
     public String getModel() {
         return this.model;
     }
@@ -26,29 +22,11 @@ public class ChatRequest {
         return this.messages;
     }
 
-    public static class ChatRequestBuilder {
-        private String model;
-        private List<Message> messages;
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-        ChatRequestBuilder() {
-        }
-
-        public ChatRequestBuilder model(String model) {
-            this.model = model;
-            return this;
-        }
-
-        public ChatRequestBuilder messages(List<Message> messages) {
-            this.messages = messages;
-            return this;
-        }
-
-        public ChatRequest build() {
-            return new ChatRequest(this.model, this.messages);
-        }
-
-        public String toString() {
-            return "ChatRequest.ChatRequestBuilder(model=" + this.model + ", messages=" + this.messages + ")";
-        }
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

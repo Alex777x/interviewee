@@ -23,10 +23,6 @@ public class InterviewParams {
         this.tokenApi = tokenApi;
     }
 
-    public static InterviewParamsBuilder builder() {
-        return new InterviewParamsBuilder();
-    }
-
     public void validateInterviewParams() throws ParamsValidationException {
         if (SELECT_AI_MODEL.equals(this.aIModel) || this.aIModel == null) {
             throw new ParamsValidationException("AI model parameter cannot be empty or default.");
@@ -67,57 +63,8 @@ public class InterviewParams {
         return this.tokenApi;
     }
 
+
     public String toString() {
         return "InterviewParams(aIModel=" + this.getAIModel() + ", speechToTextModel=" + this.getSpeechToTextModel() + ", mainInterviewLanguage=" + this.getMainInterviewLanguage() + ", secondInterviewLanguage=" + this.getSecondInterviewLanguage() + ", prompt=" + this.getPrompt() + ")";
-    }
-
-    public static class InterviewParamsBuilder {
-        private String aIModel;
-        private String speechToTextModel;
-        private Language mainInterviewLanguage;
-        private Language secondInterviewLanguage;
-        private String prompt;
-        private String tokenApi;
-
-        InterviewParamsBuilder() {
-        }
-
-        public InterviewParamsBuilder aIModel(String aIModel) {
-            this.aIModel = aIModel;
-            return this;
-        }
-
-        public InterviewParamsBuilder speechToTextModel(String speechToTextModel) {
-            this.speechToTextModel = speechToTextModel;
-            return this;
-        }
-
-        public InterviewParamsBuilder mainInterviewLanguage(Language mainInterviewLanguage) {
-            this.mainInterviewLanguage = mainInterviewLanguage;
-            return this;
-        }
-
-        public InterviewParamsBuilder secondInterviewLanguage(Language secondInterviewLanguage) {
-            this.secondInterviewLanguage = secondInterviewLanguage;
-            return this;
-        }
-
-        public InterviewParamsBuilder prompt(String prompt) {
-            this.prompt = prompt;
-            return this;
-        }
-
-        public InterviewParamsBuilder tokenApi(String tokenApi) {
-            this.tokenApi = tokenApi;
-            return this;
-        }
-
-        public InterviewParams build() {
-            return new InterviewParams(this.aIModel, this.speechToTextModel, this.mainInterviewLanguage, this.secondInterviewLanguage, this.prompt, this.tokenApi);
-        }
-
-        public String toString() {
-            return "InterviewParams.InterviewParamsBuilder(aIModel=" + this.aIModel + ", speechToTextModel=" + this.speechToTextModel + ", mainInterviewLanguage=" + this.mainInterviewLanguage + ", secondInterviewLanguage=" + this.secondInterviewLanguage + ", prompt=" + this.prompt + ", tokenApi=" + this.tokenApi + ")";
-        }
     }
 }

@@ -43,12 +43,6 @@ public class AIModelService {
         var question = recognizedText;
         addEntry(new Message("user", question));
 
-        CompletableFuture.supplyAsync(() -> {
-            var translatedQuestion = chatAI.getTranslatedQuestion(question, interviewParams.getSecondInterviewLanguage().getCode());
-            kafkaService.produce(TRANSLATED_QUESTION_TOPIC, translatedQuestion);
-            return translatedQuestion;
-        });
-
         CompletableFuture<String> answerFuture = CompletableFuture.supplyAsync(() -> {
             String answer = null;
             try {
@@ -60,6 +54,12 @@ public class AIModelService {
             kafkaService.produce(ANSWER_TOPIC, answer);
             addEntry(new Message("assistant", answer));
             return answer;
+        });
+
+        CompletableFuture.supplyAsync(() -> {
+            var translatedQuestion = chatAI.getTranslatedQuestion(question, interviewParams.getSecondInterviewLanguage().getCode());
+            kafkaService.produce(TRANSLATED_QUESTION_TOPIC, translatedQuestion);
+            return translatedQuestion;
         });
 
         answerFuture.thenAcceptAsync(answer -> {

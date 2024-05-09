@@ -105,14 +105,14 @@ public class StartViewController {
             return;
         }
         savePromptAndToken();
-        var interviewParams = InterviewParams.builder()
-                .aIModel(aiModelComboBox.getValue())
-                .speechToTextModel(speechToTextModelComboBox.getValue())
-                .mainInterviewLanguage(mainLanguageComboBox.getValue())
-                .secondInterviewLanguage(secondLanguageComboBox.getValue())
-                .prompt(promptTextField.getText())
-                .tokenApi(tokenApiTextField.getText())
-                .build();
+        var interviewParams = new InterviewParams(
+                aiModelComboBox.getValue(),
+                speechToTextModelComboBox.getValue(),
+                mainLanguageComboBox.getValue(),
+                secondLanguageComboBox.getValue(),
+                promptTextField.getText(),
+                tokenApiTextField.getText()
+        );
         try {
             interviewParams.validateInterviewParams();
             executor.submit(() -> audioProcessor.startProcessing(interviewParams));
