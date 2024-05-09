@@ -42,6 +42,7 @@ public class KafkaService {
         try {
             var scriptPath = "./start-kafka.sh";
             var processBuilder = new ProcessBuilder("/bin/bash", scriptPath);
+            processBuilder.inheritIO();
             var process = processBuilder.start();
             process.waitFor();
 

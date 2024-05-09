@@ -10,7 +10,9 @@
         <ComboBox fx:id="speechToTextModelComboBox"/>
         <ComboBox fx:id="mainLanguageComboBox"/>
         <ComboBox fx:id="secondLanguageComboBox"/>
-        <Text fx:id="readyText" text="Ready?" style="-fx-fill: red;"/>
+        <CheckBox fx:id="needTranslateCheckBox" text="Don't Translate" onAction="#handleNeedTranslateCheckBoxAction"/>
+        <Text fx:id="readyText" text="If this text is red, please restart the app; if it is green, everything is OK."
+              style="-fx-fill: red;"/>
     </HBox>
     <HBox styleClass="hbox-spacing">
         <Button fx:id="startButton" text="Start" onAction="#startInterview" styleClass="start-button"/>

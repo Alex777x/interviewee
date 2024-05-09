@@ -48,6 +48,8 @@ public class StartViewController {
     @FXML
     private Button stopButton;
     @FXML
+    private CheckBox needTranslateCheckBox;
+    @FXML
     private Text readyText;
 
     public static final String SELECT_AI_MODEL = "Select AI Model";
@@ -158,5 +160,14 @@ public class StartViewController {
             log.error("Error reading file: {}", path, e);
             return "";
         }
+    }
+
+    @FXML
+    private void handleNeedTranslateCheckBoxAction() {
+        boolean needTranslate = needTranslateCheckBox.isSelected();
+        translatedQuestionTextArea.setVisible(!needTranslate);
+        translatedAnswerTextArea.setVisible(!needTranslate);
+        translatedQuestionTextArea.setManaged(!needTranslate);
+        translatedAnswerTextArea.setManaged(!needTranslate);
     }
 }
