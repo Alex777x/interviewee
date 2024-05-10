@@ -101,6 +101,9 @@ Upon initiation, Interviewee will begin transcribing speaker output in real-time
 on the conversation. Please note that it might take a few seconds for the system to warm up before the transcription
 becomes real-time.
 
+## Usage
+![img_1.png](img_1.png)
+
 ## Limitations
 
 Default Mic and Speaker: not applicable for macOS Interviewee is currently configured to listen only to the default
@@ -108,6 +111,9 @@ set in your system. It will not detect sound from other devices or systems. If y
 different mic or speaker, you will need to set it as your default device in your system settings.
 
 ## License
-This project is licensed under the MIT License — see the [LICENSE] file for details.
 
+This project is licensed under the MIT License — see
+the [LICENSE]()https://github.com/Alex777x/interviewee/blob/master/LICENSE file for details.
 
+## Contributing
+Contributions are welcome! Feel free to open issues or submit pull requests to improve Interviewee.
