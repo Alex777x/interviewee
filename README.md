@@ -9,6 +9,20 @@ to interview questions and translating questions and answers to another language
 interviews, transcribes the conversations, and displays subtitles in real time, using AI's API for Speech-to-Text and
 Translation services.
 
+## Important Notice
+
+**Important!**
+Our application does not encourage cheating in interviews or any fraudulent activities.
+We simply aim to help people be more confident in interviews and avoid silly mistakes.
+
+Sometimes, interviews are conducted by people who are completely incompetent in what they are asking and often read
+questions from a list that have nothing to do with your field of expertise.
+Yet you still need to answer these questions to pass the interview, and this is where **Interviewee** can help you.
+
+Additionally, sometimes you may be interviewed by a foreign company.
+Even if you're fluent in the foreign language, nerves can cause confusion or make you forget something crucial.
+**Interviewee** is here to help you with that.
+
 ### Key Features:
 
 - Real-time answering of interview questions.
@@ -102,6 +116,7 @@ on the conversation. Please note that it might take a few seconds for the system
 becomes real-time.
 
 ## Usage
+
 ![Screenshot 2024.png](Screenshot_2024.png)
 
 ## Limitations
@@ -113,7 +128,8 @@ different mic or speaker, you will need to set it as your default device in your
 ## License
 
 This project is licensed under the MIT License — see
-the [LICENSE]()https://github.com/Alex777x/interviewee/blob/master/LICENSE file for details.
+the [LICENSE](https://github.com/Alex777x/interviewee/blob/master/LICENSE) file for details.
 
 ## Contributing
+
 Contributions are welcome! Feel free to open issues or submit pull requests to improve Interviewee.
