@@ -80,6 +80,7 @@ public class KafkaService {
                     if (lines.length > 30) {
                         String[] last30Messages = Arrays.copyOfRange(lines, lines.length - 30, lines.length);
                         textArea.setText(String.join("\n", last30Messages));
+                        textArea.setScrollTop(Double.MAX_VALUE);
                     }
                 });
             }
