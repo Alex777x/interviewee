@@ -24,8 +24,7 @@ Even if you're fluent in the foreign language, nerves can cause confusion or mak
 **Interviewee** is here to help you with that.
 
 ## Demo
-
-<video controls src="0510min-1.mp4" title="Demo"></video>
+<video controls src="0510-sm.mp4" title="Title"></video>
 
 ### Key Features:
 
