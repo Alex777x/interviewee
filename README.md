@@ -102,7 +102,7 @@ on the conversation. Please note that it might take a few seconds for the system
 becomes real-time.
 
 ## Usage
-![img_1.png](img_1.png)
+![Screenshot 2024.png](Screenshot_2024.png)
 
 ## Limitations
 
