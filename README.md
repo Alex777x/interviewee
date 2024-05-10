@@ -1,0 +1,113 @@
+# Interviewee
+
+Currently only macOS is supported
+
+## About the Application
+
+**Interviewee** is a Java application that uses AI's API to provide audio transcribes, answers
+to interview questions and translating questions and answers to another language. The application captures audio during
+interviews, transcribes the conversations, and displays subtitles in real time, using AI's API for Speech-to-Text and
+Translation services.
+
+### Key Features:
+
+- Real-time answering of interview questions.
+- Real-time transcription of interview questions and answers.
+- Real-time translating questions and answers in real time.
+- Integration with OpenAI's ChatGPT API for transcribing and translating audio.
+- Support for multiple languages via OpenAI API translation.
+- JavaFX-based GUI for displaying live transcriptions.
+
+## Getting Started
+
+### Prerequisites
+
+- [Java 21](https://www.oracle.com/pl/java/technologies/downloads/)
+- [OpenAI API Key](https://platform.openai.com/)
+- [Apache Maven](https://maven.apache.org/download.cgi)
+
+### macOS
+
+First, you need to install [Homebrew](https://brew.sh/), a package manager for macOS. You can install it by running the
+following command in the Terminal:
+
+```shell
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+#### Dependencies and tools:
+
+```text
+XCode Command Line Tools    
+BlackHole
+```
+
+Install XCode Command Line Tools by running the following command in the Terminal:
+
+```shell
+xcode-select --install
+```
+
+Install BlackHole, a virtual audio driver that allows you to route audio between applications. You can install it by
+running the following command in the Terminal:
+
+```shell
+brew install blackhole-2ch
+```
+
+#### BlackHole configuration
+
+Setup "Multi-Output Device" and set it as a default sound output device for your macOS.
+Guidelines are available [HERE](https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Output-Device)     
+Speakers audio on macOS will be recorded from the virtual "BlackHole 2ch" microphone. Your and BlackHole microphone
+device names could be "BlackHole 2ch":
+![img.png](img.png)
+
+### Windows
+
+Work in progress
+
+### Linux
+
+Work in progress
+
+## Installation
+
+Clone the repository:
+
+```shell
+git clone https://github.com/Alex777x/interviewee.git
+```
+
+Navigate to the Interviewee folder:
+
+```shell
+cd interviewee
+``` 
+
+Run Maven command:
+
+```shell
+mvn clean install
+```
+
+## Running Interviewee
+
+```shell
+mvn clean javafx:run
+```
+
+Upon initiation, Interviewee will begin transcribing speaker output in real-time, generating a suggested response based
+on the conversation. Please note that it might take a few seconds for the system to warm up before the transcription
+becomes real-time.
+
+## Limitations
+
+Default Mic and Speaker: not applicable for macOS Interviewee is currently configured to listen only to the default
+set in your system. It will not detect sound from other devices or systems. If you wish to use a
+different mic or speaker, you will need to set it as your default device in your system settings.
+
+## License
+This project is licensed under the MIT License — see the [LICENSE] file for details.
+
+

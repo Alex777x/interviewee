@@ -95,8 +95,4 @@ public class KafkaService {
         producer.send(new ProducerRecord<>(topic, message));
         producer.close();
     }
-
-//    public void closeProducer() {
-//        producer.close();
-//    }
 }

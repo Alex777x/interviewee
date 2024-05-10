@@ -158,7 +158,6 @@ public class StartViewController {
         startButton.setDisable(false);
         audioProcessor.stopProcessing();
         executor.submit(audioProcessor::stopProcessing);
-//        executor.submit(kafkaService::stopConsume);
         aiModelComboBox.setDisable(false);
         speechToTextModelComboBox.setDisable(false);
         mainLanguageComboBox.setDisable(false);
