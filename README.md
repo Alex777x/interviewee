@@ -119,6 +119,24 @@ becomes real-time.
 
 ![Screenshot 2024.png](Screenshot_2024.png)
 
+1. Choose an AI model that will answer questions. Currently only ChatGPT is supported.
+2. Choose a Speech-to-Text model. Currently only OpenAI API is supported.
+3. Choose a language for your interview.
+4. Choose a second language to translate the questions and answers.
+   If three (main language) and four (second languages) matches,
+   Interviewee will not translate the questions and answers into a second language
+5. If this checkbox is selected, Interviewee will not translate questions and answers into a second language.
+6. This is the text indicator. If the text is red, then something is wrong, and you need to restart the application if
+   the text is green, then everything is fine.
+7. Specify the prompt to be used for AI.
+8. Specify your OpenAI API key.
+9. Area to display the last ten questions.
+10. Area to display the last ten questions in a second language.
+11. Area to display the last ten questions.
+12. Area to display the last ten questions in a second language.
+13. Start the app and start listening to the audio going to the output device.
+14. Stop the app and stop listening to the audio going to the output device.
+
 ## Limitations
 
 Default Mic and Speaker: not applicable for macOS Interviewee is currently configured to listen only to the default
