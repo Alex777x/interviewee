@@ -72,7 +72,7 @@ public class KafkaService {
                 List<String> messages = new LinkedList<>();
                 for (ConsumerRecord<String, String> consumerRecord : records) {
                     var message = consumerRecord.value();
-                    messages.add("\n---\n" + message + "\n");
+                    messages.add("\n--------------------------------------------------------------\n" + message + "\n");
                 }
                 Platform.runLater(() -> {
                     textArea.appendText(String.join("", messages));
