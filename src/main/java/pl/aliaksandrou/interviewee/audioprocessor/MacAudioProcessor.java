@@ -36,7 +36,7 @@ public class MacAudioProcessor implements IAudioProcessor {
             if (blackHole != null) {
                 TargetDataLine targetDataLine = getTargetDataLine(blackHole);
 
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[4096];
                 int bytesRead;
                 while ((bytesRead = targetDataLine.read(buffer, 0, buffer.length)) != -1 && isRunning) {
                     var audioFileByAmplitude = getAudioFileByAmplitude(buffer, bytesRead);
@@ -55,7 +55,7 @@ public class MacAudioProcessor implements IAudioProcessor {
                 throw new BlackHoleNotFoundException("BlackHole 2ch Device not found.");
             }
         } catch (LineUnavailableException | IOException e) {
-            throw new BlackHoleMixerException("Line unavailable.", e);
+            throw new BlackHoleMixerException("Error while processing audio.", e);
         }
     }
 
