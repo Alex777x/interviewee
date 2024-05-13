@@ -23,7 +23,7 @@ Additionally, sometimes you may be interviewed by a foreign company.
 Even if you're fluent in the foreign language, nerves can cause confusion or make you forget something crucial.
 **Interviewee** is here to help you with that.
 
-## Demo   
+## Demo
 
 https://github.com/Alex777x/interviewee/assets/47153374/dcc442bf-3e4c-48a2-9935-51594c9f6d0b
 
@@ -121,7 +121,7 @@ becomes real-time.
 
 ## Usage
 
-![Screenshot 2024.png](Screenshot_2024.png)
+![img_1.png](img_1.png)   
 
 1. Choose an AI model that will answer questions. Currently only ChatGPT is supported.
 2. Choose a Speech-to-Text model. Currently only OpenAI API is supported.
@@ -130,8 +130,7 @@ becomes real-time.
    If three (main language) and four (second languages) matches,
    Interviewee will not translate the questions and answers into a second language
 5. If this checkbox is selected, Interviewee will not translate questions and answers into a second language.
-6. ~~This is the text indicator. If the text is red, then something is wrong, and you need to restart the application if
-   the text is green, then everything is fine.~~
+6. If this checkbox is selected, Interviewee will not answer questions. You can use it to transcribe the conversation.
 7. Specify the prompt to be used for AI.
 8. Specify your OpenAI API key.
 9. Area to display the last ten questions.
@@ -146,13 +145,6 @@ becomes real-time.
 Default Mic and Speaker: not applicable for macOS Interviewee is currently configured to listen only to the default
 set in your system. It will not detect sound from other devices or systems. If you wish to use a
 different mic or speaker, you will need to set it as your default device in your system settings.
-
-## Known Issues and Future Improvements
-
-1. ~~The first start of the application can take quite a long time as there is loading dependencies such as Kafka~~
-2. Sometimes the application does not start the first time and needs to restart
-3. ~~Kafka is a terrible choice for this application, and you need to get rid of it and use instead the built-in Java
-   methods of asynchronous data processing~~
 
 ## License
 
