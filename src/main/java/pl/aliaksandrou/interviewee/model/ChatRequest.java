@@ -29,4 +29,12 @@ public class ChatRequest {
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
+
+    @Override
+    public String toString() {
+        return "ChatRequest{" +
+                "model='" + model + '\'' +
+                ", messages=" + messages +
+                '}';
+    }
 }

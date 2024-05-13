@@ -1,6 +1,6 @@
 package pl.aliaksandrou.interviewee.audioprocessor;
 
-
+import javafx.scene.control.TextArea;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleMixerException;
@@ -20,12 +20,15 @@ public class MacAudioProcessor implements IAudioProcessor {
     private boolean isRecording = false;
     private boolean isRunning = true;
     private int silentSamples = 0;
-    private final int threshold = 200;
-    private static final float SAMPLE_RATE = 44100f;
-    private static final AudioFormat FORMAT = new AudioFormat(SAMPLE_RATE, 16, 2, true, false);
+    private static final float SAMPLE_RATE = AudioConstants.SAMPLE_RATE;
+    private static final AudioFormat FORMAT = AudioConstants.FORMAT;
 
     @Override
-    public void startProcessing(InterviewParams interviewParams) {
+    public void startProcessing(InterviewParams interviewParams,
+                                TextArea questionTextArea,
+                                TextArea translatedQuestionTextArea,
+                                TextArea answerTextArea,
+                                TextArea translatedAnswerTextArea) {
         isRunning = true;
         try {
             Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
@@ -37,7 +40,12 @@ public class MacAudioProcessor implements IAudioProcessor {
                 int bytesRead;
                 while ((bytesRead = targetDataLine.read(buffer, 0, buffer.length)) != -1 && isRunning) {
                     var audioFileByAmplitude = getAudioFileByAmplitude(buffer, bytesRead);
-                    new AIModelService().processAudioFileAsync(audioFileByAmplitude, interviewParams);
+                    AIModelService.getInstance().processAudioFileAsync(audioFileByAmplitude,
+                            interviewParams,
+                            questionTextArea,
+                            translatedQuestionTextArea,
+                            answerTextArea,
+                            translatedAnswerTextArea);
                     if (isRecording) {
                         writeToFile(buffer, bytesRead);
                     }
@@ -63,7 +71,7 @@ public class MacAudioProcessor implements IAudioProcessor {
     private static Mixer.Info getBlackHole(Mixer.Info[] mixerInfos) {
         Mixer.Info blackHole = null;
         for (Mixer.Info info : mixerInfos) {
-            if (info.getName().equals("BlackHole 2ch")) {
+            if (info.getName().equals(AudioConstants.BLACKHOLE_2CH)) {
                 blackHole = info;
                 break;
             }
@@ -82,7 +90,7 @@ public class MacAudioProcessor implements IAudioProcessor {
         while (i < bytesRead) {
             int sample = (buffer[i + 1] << 8) | (buffer[i] & 0xFF);
             log.debug("Amplitude: {}", sample);
-            if (sample > threshold) {
+            if (sample > AudioConstants.THRESHOLD) {
                 silentSamples = 0;
                 if (!isRecording) {
                     startRecording();
@@ -107,11 +115,11 @@ public class MacAudioProcessor implements IAudioProcessor {
     private File stopRecording() throws IOException {
         isRecording = false;
         var audioBytes = bos.toByteArray();
-        var audioInputStream = new AudioInputStream(new ByteArrayInputStream(audioBytes), FORMAT, audioBytes.length);
-        var audioFile = new File("audio.wav");
-        AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
-
-        return audioFile;
+        try (var audioInputStream = new AudioInputStream(new ByteArrayInputStream(audioBytes), FORMAT, audioBytes.length)) {
+            var audioFile = new File("audio.wav");
+            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
+            return audioFile;
+        }
     }
 
     private void writeToFile(byte[] buffer, int len) {

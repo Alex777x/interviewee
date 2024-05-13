@@ -1,6 +1,8 @@
 package pl.aliaksandrou.interviewee.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
+import javafx.scene.control.TextArea;
 import org.apache.logging.log4j.Logger;
 import pl.aliaksandrou.interviewee.aichat.IChatAI;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
@@ -9,18 +11,44 @@ import pl.aliaksandrou.interviewee.model.RecognizedText;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.concurrent.CompletableFuture;
-
-import static pl.aliaksandrou.interviewee.config.KafkaTopics.*;
 
 public class AIModelService {
 
     private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AIModelService.class);
-    private final KafkaService kafkaService = KafkaService.getInstance();
     private final LinkedList<Message> lastTenMessages = new LinkedList<>();
 
-    public void processAudioFileAsync(File audioFile, InterviewParams interviewParams) {
+    private static AIModelService instance;
+
+    private AIModelService() {
+    }
+
+    public static synchronized AIModelService getInstance() {
+        if (instance == null) {
+            instance = new AIModelService();
+        }
+        return instance;
+    }
+
+    /**
+     * This method is used to process an audio file asynchronously.
+     * It recognizes the text in the audio file, gets an answer from the AI model, and translates the text if necessary.
+     *
+     * @param audioFile                  The audio file to process.
+     * @param interviewParams            The parameters for the interview.
+     * @param questionTextArea           The text area for the question.
+     * @param translatedQuestionTextArea The text area for the translated question.
+     * @param answerTextArea             The text area for the answer.
+     * @param translatedAnswerTextArea   The text area for the translated answer.
+     */
+    public void processAudioFileAsync(File audioFile,
+                                      InterviewParams interviewParams,
+                                      TextArea questionTextArea,
+                                      TextArea translatedQuestionTextArea,
+                                      TextArea answerTextArea,
+                                      TextArea translatedAnswerTextArea) {
         if (audioFile == null) {
             return;
         }
@@ -36,7 +64,7 @@ public class AIModelService {
             }
         }).thenApply(recognizedText -> {
             if (recognizedText != null) {
-                kafkaService.produce(QUESTION_TOPIC, recognizedText);
+                setTextAreaValue(questionTextArea, recognizedText);
                 addEntry(new Message("user", recognizedText));
             }
             return recognizedText;
@@ -56,7 +84,7 @@ public class AIModelService {
                     return null;
                 }
             }).thenApply(answer -> {
-                kafkaService.produce(ANSWER_TOPIC, answer);
+                setTextAreaValue(answerTextArea, answer);
                 addEntry(new Message("assistant", answer));
                 return new String[]{question, answer};
             });
@@ -68,13 +96,27 @@ public class AIModelService {
 
             if (!interviewParams.isDoNotTranslate() && !interviewParams.getMainInterviewLanguage().equals(interviewParams.getSecondInterviewLanguage())) {
                 var chatAI = Util.getChatAI(interviewParams.getAIModel());
-                translateText(interviewParams, question, chatAI, TRANSLATED_QUESTION_TOPIC);
-                translateText(interviewParams, answer, chatAI, TRANSLATED_ANSWER_TOPIC);
+                translateText(interviewParams, question, chatAI, translatedQuestionTextArea);
+                translateText(interviewParams, answer, chatAI, translatedAnswerTextArea);
             }
         });
     }
 
-    private void translateText(InterviewParams interviewParams, String question, IChatAI chatAI, String translatedQuestionTopic) {
+    private void setTextAreaValue(TextArea textArea, String textToSet) {
+        var text = new StringBuilder(textToSet);
+        text.append("\n-------------------------------------------------------------\n");
+        Platform.runLater(() -> {
+            textArea.appendText(text.toString());
+            String[] lines = textArea.getText().split("\n");
+            if (lines.length > 30) {
+                String[] last30Messages = Arrays.copyOfRange(lines, lines.length - 30, lines.length);
+                textArea.setText(String.join("\n", last30Messages));
+                textArea.setScrollTop(Double.MAX_VALUE);
+            }
+        });
+    }
+
+    private void translateText(InterviewParams interviewParams, String question, IChatAI chatAI, TextArea translatedQuestionTopic) {
         CompletableFuture.supplyAsync(() -> {
             String translatedQuestion = null;
             try {
@@ -82,7 +124,7 @@ public class AIModelService {
             } catch (IOException e) {
                 log.error("Error while translating text: {}, ERROR: {}", question, e);
             }
-            kafkaService.produce(translatedQuestionTopic, translatedQuestion);
+            setTextAreaValue(translatedQuestionTopic, translatedQuestion);
             return translatedQuestion;
         });
     }

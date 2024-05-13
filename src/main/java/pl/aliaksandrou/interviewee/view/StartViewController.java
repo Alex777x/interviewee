@@ -2,14 +2,12 @@ package pl.aliaksandrou.interviewee.view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.text.Text;
 import org.apache.logging.log4j.Logger;
 import pl.aliaksandrou.interviewee.audioprocessor.IAudioProcessor;
 import pl.aliaksandrou.interviewee.enums.AIModel;
 import pl.aliaksandrou.interviewee.enums.Language;
 import pl.aliaksandrou.interviewee.enums.SpeechToTextModel;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
-import pl.aliaksandrou.interviewee.service.KafkaService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,8 +47,6 @@ public class StartViewController {
     private Button stopButton;
     @FXML
     private CheckBox doNotTranslateCheckBox;
-    @FXML
-    private Text readyText;
 
     public static final String SELECT_AI_MODEL = "Select AI Model";
     public static final String SELECT_SPEECH_TO_TEXT_MODEL = "Select Speech To Text Model";
@@ -59,7 +55,6 @@ public class StartViewController {
     private static final String TOKEN_TXT = "token.txt";
     private static final IAudioProcessor audioProcessor = getAudioProcessor();
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
-    private final KafkaService kafkaService = KafkaService.getInstance();
 
     @FXML
     public void initialize() {
@@ -91,15 +86,6 @@ public class StartViewController {
         tokenApiTextField.setText(readFile(TOKEN_TXT));
 
         stopButton.setDisable(true);
-        readyText.setText("If this text is red, please restart the app;\nif it is green, everything is OK.");
-
-        executor.submit(() -> kafkaService.startKafkaBroker(
-                questionTextArea,
-                translatedQuestionTextArea,
-                answerTextArea,
-                translatedAnswerTextArea,
-                readyText)
-        );
     }
 
     @FXML
@@ -119,7 +105,13 @@ public class StartViewController {
         );
         try {
             interviewParams.validateInterviewParams();
-            executor.submit(() -> audioProcessor.startProcessing(interviewParams));
+            executor.submit(() -> audioProcessor.startProcessing(
+                    interviewParams,
+                    questionTextArea,
+                    translatedQuestionTextArea,
+                    answerTextArea,
+                    translatedAnswerTextArea)
+            );
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");

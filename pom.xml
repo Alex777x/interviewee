@@ -16,7 +16,6 @@
         <kotlin-stdlib.version>1.9.23</kotlin-stdlib.version>
         <bootstrapfx-core.version>0.4.0</bootstrapfx-core.version>
         <controlsfx.version>11.1.2</controlsfx.version>
-        <kafka.version>3.7.0</kafka.version>
         <javafx.version>21</javafx.version>
         <okhttp.version>4.12.0</okhttp.version>
         <jackson-databind.version>2.17.1</jackson-databind.version>
@@ -33,11 +32,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-            <version>${kafka.version}</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

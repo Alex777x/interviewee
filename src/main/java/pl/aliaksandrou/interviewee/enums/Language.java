@@ -1,6 +1,9 @@
 package pl.aliaksandrou.interviewee.enums;
 
-
+/**
+ * This enum represents the different AI models that can be used in the application.
+ * Currently, it only contains one model: ChatGPT-4.
+ */
 public enum Language {
     ENGLISH("en"),
     CHINESE("zh"),

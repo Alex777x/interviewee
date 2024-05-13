@@ -6,7 +6,21 @@ import pl.aliaksandrou.interviewee.enums.Language;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This class implements the ISpeechToTextRecognizer interface using the OpenAI API.
+ * It provides a method to recognize the text in an audio file using the OpenAI API.
+ */
 public class OpenAISpeechToText implements ISpeechToTextRecognizer {
+
+    /**
+     * Recognizes the text in the specified audio file using the OpenAI API.
+     *
+     * @param audioFile The audio file to recognize the text from.
+     * @param language  The language of the audio file.
+     * @param tokenApi  The API token to use for the recognition.
+     * @return The recognized text.
+     * @throws IOException If an I/O error occurs during the recognition.
+     */
     @Override
     public String recognize(File audioFile, Language language, String tokenApi) throws IOException {
         var client = new OkHttpClient().newBuilder().build();
