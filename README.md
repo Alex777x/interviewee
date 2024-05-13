@@ -121,7 +121,7 @@ becomes real-time.
 
 ## Usage
 
-![img_1.png](img_1.png)   
+<img width="1710" alt="Screenshot 2024-05-13 at 20 02 01" src="https://github.com/Alex777x/interviewee/assets/47153374/e2a9158e-754a-4ec4-9b6a-a5a8be98390f">
 
 1. Choose an AI model that will answer questions. Currently only ChatGPT is supported.
 2. Choose a Speech-to-Text model. Currently only OpenAI API is supported.
