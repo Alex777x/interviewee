@@ -149,10 +149,10 @@ different mic or speaker, you will need to set it as your default device in your
 
 ## Known Issues and Future Improvements
 
-1. The first start of the application can take quite a long time as there is loading dependencies such as Kafka
+1. ~~The first start of the application can take quite a long time as there is loading dependencies such as Kafka~~
 2. Sometimes the application does not start the first time and needs to restart
-3. Kafka is a terrible choice for this application, and you need to get rid of it and use instead the built-in Java
-   methods of asynchronous data processing
+3. ~~Kafka is a terrible choice for this application, and you need to get rid of it and use instead the built-in Java
+   methods of asynchronous data processing~~
 
 ## License
 
