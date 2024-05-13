@@ -106,12 +106,11 @@ public class AIModelService {
         var text = new StringBuilder(textToSet);
         text.append("\n-------------------------------------------------------------\n");
         Platform.runLater(() -> {
-            textArea.appendText(text.toString());
+            textArea.setText(text + textArea.getText());
             String[] lines = textArea.getText().split("\n");
             if (lines.length > 30) {
-                String[] last30Messages = Arrays.copyOfRange(lines, lines.length - 30, lines.length);
+                String[] last30Messages = Arrays.copyOfRange(lines, 0, 30);
                 textArea.setText(String.join("\n", last30Messages));
-                textArea.setScrollTop(Double.MAX_VALUE);
             }
         });
     }
