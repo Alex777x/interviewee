@@ -47,6 +47,8 @@ public class StartViewController {
     private Button stopButton;
     @FXML
     private CheckBox doNotTranslateCheckBox;
+    @FXML
+    private CheckBox doNotAnswerCheckBox;
 
     public static final String SELECT_AI_MODEL = "Select AI Model";
     public static final String SELECT_SPEECH_TO_TEXT_MODEL = "Select Speech To Text Model";
@@ -85,6 +87,11 @@ public class StartViewController {
         promptTextField.setText(readFile(PROMPT_TXT));
         tokenApiTextField.setText(readFile(TOKEN_TXT));
 
+        questionTextArea.setPromptText("Questions here...");
+        translatedQuestionTextArea.setPromptText("Translated question will appear here...");
+        answerTextArea.setPromptText("AI's answer will appear here...");
+        translatedAnswerTextArea.setPromptText("Translated answer will appear here...");
+
         stopButton.setDisable(true);
     }
 
@@ -101,7 +108,8 @@ public class StartViewController {
                 secondLanguageComboBox.getValue(),
                 promptTextField.getText(),
                 tokenApiTextField.getText(),
-                doNotTranslateCheckBox.isSelected()
+                doNotTranslateCheckBox.isSelected(),
+                doNotAnswerCheckBox.isSelected()
         );
         try {
             interviewParams.validateInterviewParams();
@@ -121,14 +129,7 @@ public class StartViewController {
             return;
         }
         isInterviewStarted = true;
-        stopButton.setDisable(false);
-        startButton.setDisable(true);
-        aiModelComboBox.setDisable(true);
-        speechToTextModelComboBox.setDisable(true);
-        mainLanguageComboBox.setDisable(true);
-        secondLanguageComboBox.setDisable(true);
-        tokenApiTextField.setDisable(true);
-        doNotTranslateCheckBox.setDisable(true);
+        setStatus(true);
     }
 
     private void savePromptAndToken() {
@@ -145,17 +146,22 @@ public class StartViewController {
         if (!isInterviewStarted) {
             return;
         }
-        isInterviewStarted = false;
-        stopButton.setDisable(true);
-        startButton.setDisable(false);
         audioProcessor.stopProcessing();
         executor.submit(audioProcessor::stopProcessing);
-        aiModelComboBox.setDisable(false);
-        speechToTextModelComboBox.setDisable(false);
-        mainLanguageComboBox.setDisable(false);
-        secondLanguageComboBox.setDisable(false);
-        tokenApiTextField.setDisable(false);
-        doNotTranslateCheckBox.setDisable(false);
+        isInterviewStarted = false;
+        setStatus(false);
+    }
+
+    private void setStatus(boolean status) {
+        stopButton.setDisable(!status);
+        startButton.setDisable(status);
+        aiModelComboBox.setDisable(status);
+        speechToTextModelComboBox.setDisable(status);
+        mainLanguageComboBox.setDisable(status);
+        secondLanguageComboBox.setDisable(status);
+        tokenApiTextField.setDisable(status);
+        doNotTranslateCheckBox.setDisable(status);
+        doNotAnswerCheckBox.setDisable(status);
     }
 
     private String readFile(String path) {
@@ -171,8 +177,17 @@ public class StartViewController {
     private void handleNeedTranslateCheckBoxAction() {
         boolean needTranslate = doNotTranslateCheckBox.isSelected();
         translatedQuestionTextArea.setVisible(!needTranslate);
-        translatedAnswerTextArea.setVisible(!needTranslate);
         translatedQuestionTextArea.setManaged(!needTranslate);
+        translatedAnswerTextArea.setVisible(!needTranslate);
         translatedAnswerTextArea.setManaged(!needTranslate);
+    }
+
+    @FXML
+    public void handleNeedAnswerCheckBoxAction() {
+        boolean needAnswer = doNotAnswerCheckBox.isSelected();
+        answerTextArea.setVisible(!needAnswer);
+        answerTextArea.setManaged(!needAnswer);
+        translatedAnswerTextArea.setVisible(!needAnswer);
+        translatedAnswerTextArea.setManaged(!needAnswer);
     }
 }

@@ -11,6 +11,7 @@
         <ComboBox fx:id="mainLanguageComboBox"/>
         <ComboBox fx:id="secondLanguageComboBox"/>
         <CheckBox fx:id="doNotTranslateCheckBox" text="Don't Translate" onAction="#handleNeedTranslateCheckBoxAction"/>
+        <CheckBox fx:id="doNotAnswerCheckBox" text="Don't Answer" onAction="#handleNeedAnswerCheckBoxAction"/>
     </HBox>
     <HBox styleClass="hbox-spacing">
         <Button fx:id="startButton" text="Start" onAction="#startInterview" styleClass="start-button"/>

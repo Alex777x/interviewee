@@ -14,6 +14,7 @@ public class InterviewParams {
     private final String prompt;
     private final String tokenApi;
     private final boolean doNotTranslate;
+    private final boolean doNotAnswer;
 
     public InterviewParams(String aIModel,
                            String speechToTextModel,
@@ -21,7 +22,8 @@ public class InterviewParams {
                            Language secondInterviewLanguage,
                            String prompt,
                            String tokenApi,
-                           boolean doNotTranslate) {
+                           boolean doNotTranslate,
+                           boolean doNotAnswer) {
         this.aIModel = aIModel;
         this.speechToTextModel = speechToTextModel;
         this.mainInterviewLanguage = mainInterviewLanguage;
@@ -29,6 +31,7 @@ public class InterviewParams {
         this.prompt = prompt;
         this.tokenApi = tokenApi;
         this.doNotTranslate = doNotTranslate;
+        this.doNotAnswer = doNotAnswer;
     }
 
     public void validateInterviewParams() throws ParamsValidationException {
@@ -75,7 +78,21 @@ public class InterviewParams {
         return this.doNotTranslate;
     }
 
+    public boolean isDoNotAnswer() {
+        return this.doNotAnswer;
+    }
+
+    @Override
     public String toString() {
-        return "InterviewParams(aIModel=" + this.getAIModel() + ", speechToTextModel=" + this.getSpeechToTextModel() + ", mainInterviewLanguage=" + this.getMainInterviewLanguage() + ", secondInterviewLanguage=" + this.getSecondInterviewLanguage() + ", prompt=" + this.getPrompt() + ")";
+        return "InterviewParams{" +
+                "aIModel='" + aIModel + '\'' +
+                ", speechToTextModel='" + speechToTextModel + '\'' +
+                ", mainInterviewLanguage=" + mainInterviewLanguage +
+                ", secondInterviewLanguage=" + secondInterviewLanguage +
+                ", prompt='" + prompt + '\'' +
+                ", tokenApi='" + tokenApi + '\'' +
+                ", doNotTranslate=" + doNotTranslate +
+                ", doNotAnswer=" + doNotAnswer +
+                '}';
     }
 }

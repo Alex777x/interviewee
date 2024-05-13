@@ -69,8 +69,8 @@ public class AIModelService {
             }
             return recognizedText;
         }).thenCompose(question -> {
-            if (question == null) {
-                return CompletableFuture.completedFuture(null);
+            if (question == null || interviewParams.isDoNotAnswer()) {
+                return CompletableFuture.completedFuture(new String[]{question});
             }
 
             var chatAI = Util.getChatAI(interviewParams.getAIModel());
@@ -86,18 +86,25 @@ public class AIModelService {
             }).thenApply(answer -> {
                 setTextAreaValue(answerTextArea, answer);
                 addEntry(new Message("assistant", answer));
+                log.debug("Question: {}, Answer: {}", question, answer);
                 return new String[]{question, answer};
             });
         }).thenAcceptAsync(questionAndAnswer -> {
-            if (questionAndAnswer == null) return;
+            if (questionAndAnswer == null) {
+                return;
+            }
 
             var question = questionAndAnswer[0];
-            var answer = questionAndAnswer[1];
+            log.debug("Question: {}", question);
 
             if (!interviewParams.isDoNotTranslate() && !interviewParams.getMainInterviewLanguage().equals(interviewParams.getSecondInterviewLanguage())) {
                 var chatAI = Util.getChatAI(interviewParams.getAIModel());
                 translateText(interviewParams, question, chatAI, translatedQuestionTextArea);
-                translateText(interviewParams, answer, chatAI, translatedAnswerTextArea);
+                if (!interviewParams.isDoNotAnswer()) {
+                    var answer = questionAndAnswer[1];
+                    log.debug("Answer: {}", answer);
+                    translateText(interviewParams, answer, chatAI, translatedAnswerTextArea);
+                }
             }
         });
     }
@@ -115,7 +122,7 @@ public class AIModelService {
         });
     }
 
-    private void translateText(InterviewParams interviewParams, String question, IChatAI chatAI, TextArea translatedQuestionTopic) {
+    private void translateText(InterviewParams interviewParams, String question, IChatAI chatAI, TextArea translatedTextArea) {
         CompletableFuture.supplyAsync(() -> {
             String translatedQuestion = null;
             try {
@@ -123,7 +130,7 @@ public class AIModelService {
             } catch (IOException e) {
                 log.error("Error while translating text: {}, ERROR: {}", question, e);
             }
-            setTextAreaValue(translatedQuestionTopic, translatedQuestion);
+            setTextAreaValue(translatedTextArea, translatedQuestion);
             return translatedQuestion;
         });
     }
