@@ -73,6 +73,10 @@ running the following command in the Terminal:
 brew install blackhole-2ch
 ```
 
+```shell
+brew install maven
+```
+
 #### BlackHole configuration
 
 Setup "Multi-Output Device" and set it as a default sound output device for your macOS.
