@@ -130,8 +130,8 @@ becomes real-time.
    If three (main language) and four (second languages) matches,
    Interviewee will not translate the questions and answers into a second language
 5. If this checkbox is selected, Interviewee will not translate questions and answers into a second language.
-6. This is the text indicator. If the text is red, then something is wrong, and you need to restart the application if
-   the text is green, then everything is fine.
+6. ~~This is the text indicator. If the text is red, then something is wrong, and you need to restart the application if
+   the text is green, then everything is fine.~~
 7. Specify the prompt to be used for AI.
 8. Specify your OpenAI API key.
 9. Area to display the last ten questions.
