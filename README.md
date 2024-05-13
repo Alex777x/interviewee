@@ -73,6 +73,12 @@ running the following command in the Terminal:
 brew install blackhole-2ch
 ```
 
+Install Java 21 and Maven by running the following commands in the Terminal:
+
+```shell
+brew install openjdk@21
+```
+
 ```shell
 brew install maven
 ```
