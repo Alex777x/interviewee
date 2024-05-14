@@ -78,7 +78,12 @@ public class AIModelService {
 
             return CompletableFuture.supplyAsync(() -> {
                 try {
-                    return chatAI.getAnswer(question, messagesCopy, interviewParams.getPrompt(), interviewParams.getTokenApi());
+                    return chatAI.getAnswer(
+                            question,
+                            messagesCopy,
+                            interviewParams.getPrompt(),
+                            interviewParams.getTokenApi(),
+                            interviewParams.getAIModel());
                 } catch (IOException e) {
                     log.error("Error while getting answer for question: {}, ERROR: {}", question, e);
                     return null;
@@ -126,7 +131,12 @@ public class AIModelService {
         CompletableFuture.supplyAsync(() -> {
             String translatedQuestion = null;
             try {
-                translatedQuestion = chatAI.getTranslatedText(question, interviewParams.getSecondInterviewLanguage().getCode(), interviewParams.getTokenApi());
+                translatedQuestion = chatAI.getTranslatedText(
+                        question,
+                        interviewParams.getSecondInterviewLanguage().getCode(),
+                        interviewParams.getTokenApi(),
+                        interviewParams.getAIModel()
+                );
             } catch (IOException e) {
                 log.error("Error while translating text: {}, ERROR: {}", question, e);
             }

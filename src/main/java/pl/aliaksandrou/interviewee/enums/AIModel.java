@@ -5,7 +5,9 @@ package pl.aliaksandrou.interviewee.enums;
  * Currently, it only contains one model: ChatGPT-4.
  */
 public enum AIModel {
-    CHAT_GPT_4("ChatGPT-4");
+    GPT_4O("gpt-4o"),
+    GPT_4_TURBO("gpt-4-turbo"),
+    GPT_3_5_TURBO("gpt-3.5-turbo");
 
     private final String label;
 

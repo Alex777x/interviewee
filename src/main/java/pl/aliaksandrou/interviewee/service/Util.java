@@ -60,7 +60,7 @@ public class Util {
      * @throws IllegalArgumentException if the model is not supported.
      */
     public static IChatAI getChatAI(String aiModel) {
-        if (AIModel.CHAT_GPT_4.getLabel().equals(aiModel)) {
+        if (AIModel.GPT_4O.getLabel().equals(aiModel)) {
             return new ChatGPT();
         } else {
             throw new IllegalArgumentException("AI model not supported.");

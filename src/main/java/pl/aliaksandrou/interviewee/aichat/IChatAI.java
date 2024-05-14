@@ -19,10 +19,11 @@ public interface IChatAI {
      * @param lastTenMessages The last ten messages in the conversation.
      * @param prompt          The prompt to use for the AI.
      * @param tokenApi        The API token to use for authentication.
+     * @param aiModel         The AI model to use.
      * @return The answer from the AI.
      * @throws IOException If an I/O error occurs.
      */
-    String getAnswer(String question, LinkedList<Message> lastTenMessages, String prompt, String tokenApi) throws IOException;
+    String getAnswer(String question, LinkedList<Message> lastTenMessages, String prompt, String tokenApi, String aiModel) throws IOException;
 
     /**
      * This method is used to get a translated text from the AI.
@@ -31,8 +32,9 @@ public interface IChatAI {
      * @param question     The text to translate.
      * @param languageCode The language code to translate the text into.
      * @param tokenApi     The API token to use for authentication.
+     * @param aiModel      The AI model to use.
      * @return The translated text.
      * @throws IOException If an I/O error occurs.
      */
-    String getTranslatedText(String question, String languageCode, String tokenApi) throws IOException;
+    String getTranslatedText(String question, String languageCode, String tokenApi, String aiModel) throws IOException;
 }

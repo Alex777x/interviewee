@@ -27,13 +27,14 @@ public class ChatGPT implements IChatAI {
      * @param lastTenMessages The last ten messages in the conversation.
      * @param prompt          The prompt to use for the AI model.
      * @param tokenApi        The API token to use for authentication.
+     * @param aiModel         The AI model to use.
      * @return The answer from the AI model.
      * @throws IOException If an I/O error occurs.
      */
     @Override
-    public String getAnswer(String question, LinkedList<Message> lastTenMessages, String prompt, String tokenApi) throws IOException {
+    public String getAnswer(String question, LinkedList<Message> lastTenMessages, String prompt, String tokenApi, String aiModel) throws IOException {
         lastTenMessages.addFirst(new Message(Constants.SYSTEM, prompt));
-        return getChatGPTAnswer(tokenApi, lastTenMessages);
+        return getChatGPTAnswer(tokenApi, lastTenMessages, aiModel);
     }
 
     /**
@@ -42,11 +43,12 @@ public class ChatGPT implements IChatAI {
      * @param question     The text to translate.
      * @param languageCode The language code to translate the text into.
      * @param tokenApi     The API token to use for authentication.
+     * @param aiModel      The AI model to use.
      * @return The translated text.
      * @throws IOException If an I/O error occurs.
      */
     @Override
-    public String getTranslatedText(String question, String languageCode, String tokenApi) throws IOException {
+    public String getTranslatedText(String question, String languageCode, String tokenApi, String aiModel) throws IOException {
         var system = new Message(Constants.SYSTEM, "Please translate this text to: " + languageCode + " language." +
                 " Do not translate jargon or technical words.");
         var user = new Message("user", question);
@@ -54,7 +56,7 @@ public class ChatGPT implements IChatAI {
         messages.addLast(system);
         messages.addLast(user);
 
-        return getChatGPTAnswer(tokenApi, messages);
+        return getChatGPTAnswer(tokenApi, messages, aiModel);
     }
 
     /**
@@ -62,12 +64,13 @@ public class ChatGPT implements IChatAI {
      *
      * @param tokenApi The API token to use for authentication.
      * @param messages The messages to send to the AI model.
+     * @param aiModel  The AI model to use.
      * @return The response from the AI model.
      * @throws IOException If an I/O error occurs.
      */
-    private String getChatGPTAnswer(String tokenApi, List<Message> messages) throws IOException {
+    private String getChatGPTAnswer(String tokenApi, List<Message> messages, String aiModel) throws IOException {
         var chatRequest = new ChatRequest();
-        chatRequest.setModel(Constants.GPT_3_5_TURBO);
+        chatRequest.setModel(aiModel);
         chatRequest.setMessages(messages);
 
         log.debug("Sending request to OpenAI API: {}", chatRequest);
