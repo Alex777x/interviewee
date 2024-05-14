@@ -90,7 +90,6 @@ public class InterviewParams {
                 ", mainInterviewLanguage=" + mainInterviewLanguage +
                 ", secondInterviewLanguage=" + secondInterviewLanguage +
                 ", prompt='" + prompt + '\'' +
-                ", tokenApi='" + tokenApi + '\'' +
                 ", doNotTranslate=" + doNotTranslate +
                 ", doNotAnswer=" + doNotAnswer +
                 '}';
