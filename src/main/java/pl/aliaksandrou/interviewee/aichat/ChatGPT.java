@@ -67,7 +67,7 @@ public class ChatGPT implements IChatAI {
      */
     private String getChatGPTAnswer(String tokenApi, List<Message> messages) throws IOException {
         var chatRequest = new ChatRequest();
-        chatRequest.setModel(Constants.GPT_3_5_TURBO);
+        chatRequest.setModel(Constants.GPT_4_O);
         chatRequest.setMessages(messages);
 
         log.debug("Sending request to OpenAI API: {}", chatRequest);

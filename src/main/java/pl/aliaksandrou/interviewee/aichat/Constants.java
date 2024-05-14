@@ -8,6 +8,6 @@ public class Constants {
     }
 
     public static final String SYSTEM = "system";
-    public static final String GPT_3_5_TURBO = "gpt-3.5-turbo";
+    public static final String GPT_4_O = "gpt-4o";
     public static final String API_OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 }
