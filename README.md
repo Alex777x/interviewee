@@ -93,7 +93,26 @@ device names could be "BlackHole 2ch":
 
 ### Windows
 
-Work in progress
+First, you need to install [Chocolatey](https://chocolatey.org/install/), a package manager for Windows.
+You can install it by running the following command in the PowerShell (run as administrator):
+
+```shell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+
+Install Java 21, Maven and Git by running the following commands in the PowerShell (run as administrator)
+
+```shell
+choco install openjdk
+```
+
+```shell
+choco install maven
+```
+
+```shell
+choco install git.install
+```
 
 ### Linux
 
