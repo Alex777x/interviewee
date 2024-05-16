@@ -1,8 +1,10 @@
-package pl.aliaksandrou.interviewee.audioprocessor;
+package pl.aliaksandrou.interviewee.audioprocessor.macos;
 
 import javafx.scene.control.TextArea;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import pl.aliaksandrou.interviewee.audioprocessor.AudioConstants;
+import pl.aliaksandrou.interviewee.audioprocessor.IAudioProcessor;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleMixerException;
 import pl.aliaksandrou.interviewee.exceptions.BlackHoleNotFoundException;
 import pl.aliaksandrou.interviewee.model.InterviewParams;

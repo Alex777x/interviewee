@@ -1,8 +1,9 @@
 
-package pl.aliaksandrou.interviewee.audioprocessor;
+package pl.aliaksandrou.interviewee.audioprocessor.linux;
 
 
 import javafx.scene.control.TextArea;
+import pl.aliaksandrou.interviewee.audioprocessor.IAudioProcessor;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
 
 public class LinuxAudioProcessor implements IAudioProcessor {
