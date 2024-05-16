@@ -3,8 +3,6 @@ package pl.aliaksandrou.interviewee.audioprocessor;
 import javafx.scene.control.TextArea;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
 
-import java.io.IOException;
-
 /**
  * This interface defines the methods that an audio processor should implement.
  * An audio processor is responsible for handling the audio input and output during an interview.
@@ -31,5 +29,5 @@ public interface IAudioProcessor {
                          TextArea questionTextArea,
                          TextArea translatedQuestionTextArea,
                          TextArea answerTextArea,
-                         TextArea translatedAnswerTextArea) throws IOException;
+                         TextArea translatedAnswerTextArea);
 }
