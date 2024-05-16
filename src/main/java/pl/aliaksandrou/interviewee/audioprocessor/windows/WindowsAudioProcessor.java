@@ -9,6 +9,8 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 import javafx.scene.control.TextArea;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.aliaksandrou.interviewee.audioprocessor.IAudioProcessor;
 import pl.aliaksandrou.interviewee.model.InterviewParams;
 
@@ -22,6 +24,7 @@ public class WindowsAudioProcessor implements IAudioProcessor {
 
     private static final int BUFFER_SIZE = 8192;
     private static final int RECORD_TIMEOUT = 3000; // in milliseconds
+    private static final Logger log = LoggerFactory.getLogger(WindowsAudioProcessor.class);
     private boolean isRunning = true;
 
     @Override
@@ -30,10 +33,11 @@ public class WindowsAudioProcessor implements IAudioProcessor {
                                 TextArea translatedQuestionTextArea,
                                 TextArea answerTextArea,
                                 TextArea translatedAnswerTextArea) {
-        // Initialize COM library
+        log.info("Starting audio processing...");
+        log.info("Initialize COM library");
         CoreAudioUtil.Ole32.INSTANCE.CoInitializeEx(null, CoreAudioUtil.Ole32.COINIT_MULTITHREADED);
 
-        // Get the default audio endpoint
+        log.info("Get the default audio endpoint");
         PointerByReference pEnumerator = new PointerByReference();
         WinNT.HRESULT hr = CoreAudioUtil.Mmdeviceapi.INSTANCE.CoCreateInstance(CoreAudioUtil.Mmdeviceapi.CLSID_MMDeviceEnumerator, null, 1, CoreAudioUtil.Mmdeviceapi.IID_IMMDeviceEnumerator, pEnumerator);
         if (COMUtils.FAILED(hr)) {
@@ -48,7 +52,7 @@ public class WindowsAudioProcessor implements IAudioProcessor {
         }
         CoreAudioUtil.IMMDevice device = COMUtils.queryInterface(new Unknown(pDevice.getValue()), CoreAudioUtil.IMMDevice.class);
 
-        // Activate the audio client
+        log.info("Activate the audio client");
         PointerByReference pAudioClient = new PointerByReference();
         hr = device.Activate(new Guid.REFIID(CoreAudioUtil.Mmdeviceapi.IID_IAudioClient.getPointer()), 1, null, pAudioClient);
         if (COMUtils.FAILED(hr)) {
@@ -56,7 +60,7 @@ public class WindowsAudioProcessor implements IAudioProcessor {
         }
         CoreAudioUtil.IAudioClient audioClient = COMUtils.queryInterface(new Unknown(pAudioClient.getValue()), CoreAudioUtil.IAudioClient.class);
 
-        // Get the mix format
+        log.info("Get the mix format");
         PointerByReference ppDeviceFormat = new PointerByReference();
         hr = audioClient.GetMixFormat(ppDeviceFormat);
         if (COMUtils.FAILED(hr)) {
@@ -64,14 +68,14 @@ public class WindowsAudioProcessor implements IAudioProcessor {
         }
         AudioFormat format = getAudioFormat(ppDeviceFormat.getValue());
 
-        // Initialize the audio client
+        log.info("Initialize the audio client");
         long hnsBufferDuration = 10000000L;
         hr = audioClient.Initialize(1, 2, hnsBufferDuration, 0, ppDeviceFormat.getValue(), null);
         if (COMUtils.FAILED(hr)) {
             throw new RuntimeException("Failed to initialize audio client: " + hr.intValue());
         }
 
-        // Get the buffer size
+        log.info("Get the buffer size");
         IntByReference pNumBufferFrames = new IntByReference();
         hr = audioClient.GetBufferSize(pNumBufferFrames);
         if (COMUtils.FAILED(hr)) {
@@ -79,7 +83,7 @@ public class WindowsAudioProcessor implements IAudioProcessor {
         }
         int bufferSize = pNumBufferFrames.getValue();
 
-        // Get the audio capture client
+        log.info("Get the audio capture client");
         PointerByReference pCaptureClient = new PointerByReference();
         hr = audioClient.GetService(new Guid.REFIID(CoreAudioUtil.Mmdeviceapi.IID_IAudioCaptureClient.getPointer()), pCaptureClient);
         if (COMUtils.FAILED(hr)) {
@@ -87,13 +91,13 @@ public class WindowsAudioProcessor implements IAudioProcessor {
         }
         CoreAudioUtil.IAudioCaptureClient captureClient = COMUtils.queryInterface(new Unknown(pCaptureClient.getValue()), CoreAudioUtil.IAudioCaptureClient.class);
 
-        // Start the audio client
+        log.info("Start the audio client");
         hr = audioClient.Start();
         if (COMUtils.FAILED(hr)) {
             throw new RuntimeException("Failed to start audio client: " + hr.intValue());
         }
 
-        // Start recording
+        log.info("Start recording");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         long startTime = System.currentTimeMillis();
 
@@ -126,15 +130,16 @@ public class WindowsAudioProcessor implements IAudioProcessor {
             CoreAudioUtil.Kernel32.INSTANCE.Sleep(10);
         }
 
-        // Stop the audio client
+        log.info("Stop recording");
         hr = audioClient.Stop();
         if (COMUtils.FAILED(hr)) {
             throw new RuntimeException("Failed to stop audio client: " + hr.intValue());
         }
         CoreAudioUtil.Ole32.INSTANCE.CoUninitialize();
 
-        // Save or process the recorded audio data
+        log.info("Save or process the recorded audio data");
         byte[] recordedAudio = out.toByteArray();
+        log.info("Recorded audio data: {}", recordedAudio);
         // Here you can save or process the recorded audio data
     }
 
