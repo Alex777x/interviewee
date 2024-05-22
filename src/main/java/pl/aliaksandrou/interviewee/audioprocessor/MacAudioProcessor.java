@@ -89,7 +89,7 @@ public class MacAudioProcessor implements IAudioProcessor {
         int i = 0;
         while (i < bytesRead) {
             int sample = (buffer[i + 1] << 8) | (buffer[i] & 0xFF);
-            log.debug("Amplitude: {}", sample);
+//            log.debug("Amplitude: {}", sample); for testing purposes
             if (sample > AudioConstants.THRESHOLD) {
                 silentSamples = 0;
                 if (!isRecording) {
