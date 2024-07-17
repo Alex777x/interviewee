@@ -5,6 +5,7 @@ import pl.aliaksandrou.interviewee.enums.Language;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class implements the ISpeechToTextRecognizer interface using the OpenAI API.
@@ -23,7 +24,12 @@ public class OpenAISpeechToText implements ISpeechToTextRecognizer {
      */
     @Override
     public String recognize(File audioFile, Language language, String tokenApi) throws IOException {
-        var client = new OkHttpClient().newBuilder().build();
+        var client = new OkHttpClient.Builder()
+                .connectionPool(new ConnectionPool(5, 5, TimeUnit.MINUTES))
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build();
         var body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", audioFile.getName(),

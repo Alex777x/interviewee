@@ -10,6 +10,7 @@ import pl.aliaksandrou.interviewee.model.chatgpt.ChatGPTResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class implements the IChatAI interface and provides methods to interact with the ChatGPT AI model.
@@ -18,7 +19,12 @@ public class ChatGPT implements IChatAI {
 
     private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ChatGPT.class);
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .connectionPool(new ConnectionPool(5, 5, TimeUnit.MINUTES))
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build();
 
     /**
      * This method is used to get an answer from the ChatGPT AI model.
